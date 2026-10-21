@@ -5,7 +5,7 @@ export default defineConfig({
   base: "./",
   plugins: [react()],
   build: {
-    outDir: "../editor",
+    outDir: "editor",
     emptyOutDir: true,
     sourcemap: false,
   },

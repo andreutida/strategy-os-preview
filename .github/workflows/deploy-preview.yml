@@ -23,11 +23,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: react-flow-editor/package-lock.json
+          cache-dependency-path: package-lock.json
       - run: npm ci
-        working-directory: react-flow-editor
       - run: npm run build
-        working-directory: react-flow-editor
       - uses: actions/upload-pages-artifact@v3
         with:
           path: editor
