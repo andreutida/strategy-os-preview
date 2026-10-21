@@ -87,27 +87,31 @@ function Matrix() {
   const flow = useReactFlow();
 
   useEffect(() => { documentRef.current = document; }, [document]);
-  const persistDocument = (snapshot: DiagnosticDocument) => {
-    if (!confirmed) return;
+  const persistDocument = (snapshot: DiagnosticDocument): Promise<boolean> => {
+    if (!confirmed) return Promise.resolve(false);
     const revision = ++saveRevision.current;
     setDiagnosisSaveState("saving");
     const persist = () => {
       try {
         saveDiagnosticDocument(localStorage, snapshot);
         if (revision === saveRevision.current) { setDiagnosisSaveState("saved"); setDiagnosisSaveError(""); }
+        return true;
       } catch (cause) {
         if (revision === saveRevision.current) {
           setDiagnosisSaveState("error");
           setDiagnosisSaveError(cause instanceof Error ? cause.message : "Não foi possível salvar no navegador.");
         }
+        return false;
       }
     };
-    saveQueue.current = saveQueue.current.then(persist, persist);
+    const queued = saveQueue.current.then(persist, persist);
+    saveQueue.current = queued.then(() => undefined);
+    return queued;
   };
   const applyDocument = (next: DiagnosticDocument) => {
     documentRef.current = next;
     setDocument(next);
-    persistDocument(next);
+    return persistDocument(next);
   };
   useEffect(() => { if (!wasConfirmed.current && confirmed) persistDocument(documentRef.current); wasConfirmed.current = confirmed; }, [confirmed]);
   useEffect(() => () => { editTimers.current.forEach((timer) => clearTimeout(timer)); }, []);
@@ -341,12 +345,24 @@ function Matrix() {
       } else {
         next = createSemanticRelation(documentRef.current, { id: id(), sourceDiagnosisId: source, targetDiagnosisId: target, type: relationType });
       }
-      applyDocument(next); cancelConnect();
+      const previous = documentRef.current;
+      applyDocument(next).then((persisted) => {
+        if (persisted) { cancelConnect(); return; }
+        if (documentRef.current === next) { documentRef.current = previous; setDocument(previous); }
+        setRelationBusy(false);
+        setError("Não foi possível salvar a relação. Revise e tente novamente.");
+      });
     } catch (cause) { setRelationBusy(false); setError(cause instanceof Error ? cause.message : "Não foi possível criar a relação."); }
   };
   const mutateRelation = (operation: () => DiagnosticDocument) => {
-    try { applyDocument(operation()); setError(""); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível alterar a relação."); }
+    try {
+      const previous = documentRef.current;
+      const next = operation();
+      applyDocument(next).then((persisted) => {
+        if (!persisted && documentRef.current === next) { documentRef.current = previous; setDocument(previous); setError("Não foi possível salvar a relação. A alteração foi desfeita."); }
+        else if (persisted) setError("");
+      });
+    } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível alterar a relação."); }
   };
   const createDiagnosis = () => {
     try {
@@ -499,7 +515,7 @@ function Matrix() {
       {connectTarget && <aside className="relation-choice" aria-label="Escolher tipo de relação"><strong>Criar relação</strong><p><b>{diagnosisNameFor(document, connectOrigin)}</b> → <b>{diagnosisNameFor(document, connectTarget)}</b></p><label>Tipo<select aria-label="Tipo da relação" value={relationType} onChange={(event) => setRelationType(event.target.value as "hierarchy" | SemanticRelationType)}><option value="">Selecione o tipo</option><option value="hierarchy">Hierarquia — Superior → Filho</option><option value="hinders">Dificulta</option><option value="contributes-to">Contribui para</option><option value="depends-on">Depende de</option></select></label><div><button onClick={cancelConnect}>Cancelar</button><button className="primary" disabled={!relationType || relationBusy} onClick={saveRelation}>{relationBusy ? "Salvando…" : "Confirmar relação"}</button></div></aside>}
       {connectOrigin && !connectTarget && <p className="connect-status" role="status">{connectOrigin === "pending" ? "Conectar: selecione a origem." : `Conectar: ${diagnosisNameFor(document, connectOrigin)} selecionado. Selecione o destino.`}</p>}
       {error && <p className="matrix-error">{error}</p>}
-      <div className={`matrix-flow${selectedDiagnosisItem ? " has-diagnosis-editor" : ""}`}>
+      <div className={`matrix-flow${selectedDiagnosisItem ? " has-diagnosis-editor" : ""}`} onPointerCancel={() => { if (connectOrigin) cancelConnect(); }}>
         <ReactFlow nodes={[...nodes, ...diagnosisNodes]} nodeTypes={diagnosisNodeTypes} edgeTypes={diagnosisEdgeTypes} edges={diagnosisEdges} fitView nodesDraggable={false} onNodeClick={(_, node) => { const diagnosisId = diagnosisIdFromNodeId(node.id); if (diagnosisId) { if (connectOrigin) { chooseRelationEndpoint(diagnosisId); return; } setSelectedDiagnosis(diagnosisId); setSelected(""); requestAnimationFrame(() => requestAnimationFrame(() => frameDiagnosis(diagnosisId))); return; } if (!connectOrigin) { setSelected(node.id); setMoreActionsOpen(false); } }} onPaneClick={() => { if (connectOrigin) setError("Selecione um cartão de diagnóstico válido para conectar."); }} onKeyDown={(event) => { if (event.key === "Escape" && connectOrigin) cancelConnect(); }}>
           <Background /><Controls /><MiniMap />
         </ReactFlow>
