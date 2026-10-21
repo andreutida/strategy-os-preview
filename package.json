@@ -8,7 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "test:foundation": "tsx --test ../tests/diagnostic-foundation.test.ts",
-    "test": "npm run test:foundation && node ../tests/economic-matrix-e2e.cjs && node ../tests/economic-matrix-ordering-e2e.cjs && node ../tests/economic-matrix-migration-e2e.cjs && node ../tests/context-panel-e2e.cjs && node ../tests/connections.cjs && node ../tests/diagnosis-form-e2e.cjs && node ../tests/diagnosis-management-e2e.cjs && node ../tests/diagnosis-visual-e2e.cjs && node ../tests/diagnosis-relations-e2e.cjs && node ../tests/diagnosis-relations-management-e2e.cjs",
+    "test": "npm run test:foundation && node ../tests/economic-matrix-e2e.cjs && node ../tests/economic-matrix-ordering-e2e.cjs && node ../tests/economic-matrix-migration-e2e.cjs && node ../tests/context-panel-e2e.cjs && node ../tests/connections.cjs && node ../tests/diagnosis-form-e2e.cjs && node ../tests/diagnosis-management-e2e.cjs && node ../tests/diagnosis-visual-e2e.cjs && node ../tests/diagnosis-relations-e2e.cjs && node ../tests/diagnosis-relations-management-e2e.cjs && node ../tests/diagnosis-visibility-e2e.cjs",
     "preview": "vite preview"
   },
   "dependencies": {

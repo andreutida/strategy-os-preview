@@ -3,6 +3,7 @@ import type { DiagnosticDocument, SemanticRelationType } from "../domain/model";
 import type { MatrixPresentation } from "../layout/economicMatrix";
 import { routeDiagnosisRelation, type RelationObstacle, type RelationPoint, type RelationSegment } from "../layout/diagnosisRelationRouting";
 import { diagnosisVisualRepresentations, type DiagnosisVisualRepresentation, DIAGNOSIS_CARD_PREFIX } from "./diagnosisVisualAdapter";
+import type { DiagnosisVisibilityResult } from "../layout/diagnosisVisibility";
 
 export const DIAGNOSIS_RELATION_PREFIX = "diagnosis-relation:";
 export type DiagnosisRelationVisualKind = "hierarchy" | SemanticRelationType;
@@ -32,15 +33,15 @@ export function selectRelationAnchors(source: DiagnosisVisualRepresentation, tar
 }
 
 /** Projects domain relations once, even if future UX-004 supplies several representations per diagnosis. */
-export function diagnosisRelationEdges(document: DiagnosticDocument, presentation: MatrixPresentation): Edge<DiagnosisRelationEdgeData>[] {
-  const representations = diagnosisVisualRepresentations(document, presentation);
+export function diagnosisRelationEdges(document: DiagnosticDocument, presentation: MatrixPresentation, visibility?: DiagnosisVisibilityResult): Edge<DiagnosisRelationEdgeData>[] {
+  const representations = diagnosisVisualRepresentations(document, presentation, visibility);
   const byDiagnosis = new Map<string, DiagnosisVisualRepresentation>();
   representations.forEach((representation) => { if (!byDiagnosis.has(representation.diagnosisId)) byDiagnosis.set(representation.diagnosisId, representation); });
   const obstacles = representations.map((item) => ({ diagnosisId: item.diagnosisId, left: item.bounds.x, top: item.bounds.y, right: item.bounds.x + item.bounds.width, bottom: item.bounds.y + item.bounds.height }));
   const candidates = [
     ...document.hierarchies.map((relation) => ({ id: `${relation.parentId}:${relation.childId}`, kind: "hierarchy" as const, sourceId: relation.parentId, targetId: relation.childId })),
     ...document.semanticRelations.map((relation) => ({ id: relation.id, kind: relation.type, sourceId: relation.sourceDiagnosisId, targetId: relation.targetDiagnosisId })),
-  ].filter((relation) => active(document, relation.sourceId) && active(document, relation.targetId) && byDiagnosis.has(relation.sourceId) && byDiagnosis.has(relation.targetId));
+  ].filter((relation) => active(document, relation.sourceId) && active(document, relation.targetId) && byDiagnosis.has(relation.sourceId) && byDiagnosis.has(relation.targetId) && (visibility?.relations.find((item) => item.id === relation.id && item.kind === relation.kind)?.visible ?? true));
   const reserved: RelationSegment[] = [];
   return candidates.sort((a, b) => edgeId(a.kind, a.id).localeCompare(edgeId(b.kind, b.id))).map((relation, index) => {
     const source = byDiagnosis.get(relation.sourceId)!; const target = byDiagnosis.get(relation.targetId)!;

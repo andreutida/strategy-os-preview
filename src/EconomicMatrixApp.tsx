@@ -27,11 +27,13 @@ import {
   removeHierarchy,
 } from "./domain/commands";
 import { economicMatrixNodes } from "./flow/economicMatrixAdapter";
-import { diagnosisIdFromNodeId, diagnosisNodeTypes, diagnosisVisualNodes } from "./flow/diagnosisVisualAdapter";
+import { diagnosisIdFromNodeId, diagnosisNodeTypes, diagnosisVisibleDocument, diagnosisVisualNodes } from "./flow/diagnosisVisualAdapter";
 import { diagnosisRelationEdges } from "./flow/diagnosisRelationAdapter";
 import { diagnosisEdgeTypes } from "./flow/DiagnosisRelationEdge";
 import { DEFAULT_COLUMN_WIDTH, layoutEconomicMatrix, MIN_COLUMN_WIDTH, type MatrixPresentation } from "./layout/economicMatrix";
 import { layoutDiagnosisCoverage } from "./layout/diagnosisCoverageGeometry";
+import { planDiagnosisReveal, resolveDiagnosisVisibility, type DiagnosisVisibilityPresentation } from "./layout/diagnosisVisibility";
+import { loadDiagnosisVisibilityPresentation, sanitizeDiagnosisVisibilityPresentation, saveDiagnosisVisibilityPresentation } from "./layout/visibilityPresentationStorage";
 import {
   movePresentationItem,
   movePresentationItemBy,
@@ -61,6 +63,9 @@ function Matrix() {
   const [presentation, setPresentation] = useState<MatrixPresentation>(() =>
     loadMatrixPresentation(localStorage, loaded.document),
   );
+  const [visibilityPresentation, setVisibilityPresentation] = useState<DiagnosisVisibilityPresentation>(() =>
+    loadDiagnosisVisibilityPresentation(localStorage, loaded.document),
+  );
   const [confirmed, setConfirmed] = useState(loaded.source !== "legacy-migration");
   const [error, setError] = useState("");
   const [kind, setKind] = useState<"structure" | "measure" | "unit" | "group">("structure");
@@ -79,7 +84,9 @@ function Matrix() {
   const [relationBusy, setRelationBusy] = useState(false);
   const [diagnosisSaveState, setDiagnosisSaveState] = useState<"saving" | "saved" | "error" | "idle">("idle");
   const [diagnosisSaveError, setDiagnosisSaveError] = useState("");
+  const [hiddenRelationsFor, setHiddenRelationsFor] = useState("");
   const documentRef = useRef(document);
+  const persistedVisibilityPresentation = useRef(visibilityPresentation);
   const saveQueue = useRef(Promise.resolve());
   const saveRevision = useRef(0);
   const editTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
@@ -130,12 +137,32 @@ function Matrix() {
     }
   }, [document, presentation]);
 
+  useEffect(() => {
+    const sanitized = sanitizeDiagnosisVisibilityPresentation(visibilityPresentation, document);
+    if (JSON.stringify(sanitized) !== JSON.stringify(visibilityPresentation)) {
+      setVisibilityPresentation(sanitized);
+      return;
+    }
+    try {
+      saveDiagnosisVisibilityPresentation(localStorage, sanitized);
+      persistedVisibilityPresentation.current = sanitized;
+    } catch {
+      setVisibilityPresentation(persistedVisibilityPresentation.current);
+      setError("Não foi possível salvar o recolhimento hierárquico.");
+    }
+  }, [document, visibilityPresentation]);
+
   const renderedPresentation = useMemo<MatrixPresentation>(() => ({ ...presentation, columnWidths: { ...presentation.columnWidths, ...widthPreview } }), [presentation, widthPreview]);
   const layout = useMemo(() => layoutEconomicMatrix(document, renderedPresentation), [document, renderedPresentation]);
   const nodes = useMemo(() => economicMatrixNodes(document, renderedPresentation), [document, renderedPresentation]);
-  const coverageGeometry = useMemo(() => layoutDiagnosisCoverage(document, renderedPresentation), [document, renderedPresentation]);
-  const diagnosisNodes = useMemo(() => diagnosisVisualNodes(document, renderedPresentation, selectedDiagnosis), [document, renderedPresentation, selectedDiagnosis]);
-  const diagnosisEdges = useMemo(() => diagnosisRelationEdges(document, renderedPresentation), [document, renderedPresentation]);
+  const visibility = useMemo(() => resolveDiagnosisVisibility(document, renderedPresentation, visibilityPresentation), [document, renderedPresentation, visibilityPresentation]);
+  const visibleDocument = useMemo(() => diagnosisVisibleDocument(document, visibility), [document, visibility]);
+  const coverageGeometry = useMemo(() => layoutDiagnosisCoverage(visibleDocument, renderedPresentation), [visibleDocument, renderedPresentation]);
+  const diagnosisNodes = useMemo(() => diagnosisVisualNodes(document, renderedPresentation, selectedDiagnosis, visibility, {
+    onToggleHierarchy: (diagnosisId) => setVisibilityPresentation((current) => ({ ...current, collapsedDiagnosisIds: current.collapsedDiagnosisIds.includes(diagnosisId) ? current.collapsedDiagnosisIds.filter((item) => item !== diagnosisId) : [...current.collapsedDiagnosisIds, diagnosisId] })),
+    onOpenHiddenRelations: setHiddenRelationsFor,
+  }), [document, renderedPresentation, selectedDiagnosis, visibility]);
+  const diagnosisEdges = useMemo(() => diagnosisRelationEdges(document, renderedPresentation, visibility), [document, renderedPresentation, visibility]);
   const order = useMemo(
     () => (selected ? presentationOrderFor(document, presentation, selected) : undefined),
     [document, presentation, selected],
@@ -287,6 +314,7 @@ function Matrix() {
     });
   };
   const hiddenMeasureCount = selectedStructure ? document.measures.filter((item) => item.structureId === selectedStructure.id).length : 0;
+  const hiddenDiagnosisCountForMeasure = selectedMeasure ? (visibility.hiddenDiagnosisIdsByMeasure[selectedMeasure.id] ?? []).length : 0;
   const selectedDiagnosisItem = document.diagnoses.find((item) => item.id === selectedDiagnosis && !item.deletedAt) ?? (document.diagnosisDrafts ?? []).find((item) => item.id === selectedDiagnosis && !item.deletedAt);
   const updateDiagnosisEditor = (diagnosisId: string, value: DiagnosisEditorValue, mode: "debounced" | "immediate") => {
     const persistEdit = () => {
@@ -387,6 +415,25 @@ function Matrix() {
     flow.fitBounds({ x, y, width: right - x, height: bottom - y }, { padding: 0.25, duration: 180 });
   };
 
+  const revealDiagnosis = (diagnosisId: string) => {
+    const plan = planDiagnosisReveal(documentRef.current, presentation, visibilityPresentation, diagnosisId);
+    if (!plan.canReveal) {
+      setError("Este diagnóstico não pode ser revelado porque não possui uma interseção organizacional ativa.");
+      return;
+    }
+    setVisibilityPresentation((current) => ({ ...current, collapsedDiagnosisIds: current.collapsedDiagnosisIds.filter((item) => !plan.expandDiagnosisIds.includes(item)) }));
+    setPresentation((current) => ({
+      ...current,
+      collapsedMeasureIds: current.collapsedMeasureIds.filter((item) => !plan.expandMeasureIds.includes(item)),
+      collapsedStructureIds: current.collapsedStructureIds.filter((item) => !plan.expandStructureIds.includes(item)),
+    }));
+    setHiddenRelationsFor("");
+    setSelectedDiagnosis(diagnosisId);
+    setError("");
+    requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(() => frameDiagnosis(diagnosisId))));
+  };
+  const hiddenRelationItems = hiddenRelationsFor ? visibility.hiddenRelationIndicators.filter((item) => item.diagnosisId === hiddenRelationsFor) : [];
+
   const deleteSelectedDiagnosis = () => {
     if (!selectedDiagnosisItem || !confirm("Excluir logicamente este diagnóstico?")) return;
     const timer = editTimers.current.get(selectedDiagnosisItem.id);
@@ -464,7 +511,7 @@ function Matrix() {
         <section className="matrix-toolbar matrix-context-section" aria-label="Ações principais"><h2>Ações principais</h2>
         <button onClick={edit}>Editar</button>
         {selectedStructure && <button onClick={() => toggleCollapsed("structure")}>{presentation.collapsedStructureIds.includes(selectedStructure.id) ? `Expandir Estrutura (${hiddenMeasureCount} Medidas)` : "Recolher Estrutura"}</button>}
-        {selectedMeasure && <button onClick={() => toggleCollapsed("measure")}>{presentation.collapsedMeasureIds.includes(selectedMeasure.id) ? "Expandir Medida" : "Recolher Medida"}</button>}
+        {selectedMeasure && <button onClick={() => toggleCollapsed("measure")}>{presentation.collapsedMeasureIds.includes(selectedMeasure.id) ? `Expandir Medida${hiddenDiagnosisCountForMeasure ? ` (${hiddenDiagnosisCountForMeasure} diagnóstico${hiddenDiagnosisCountForMeasure === 1 ? "" : "s"} oculto${hiddenDiagnosisCountForMeasure === 1 ? "" : "s"})` : ""}` : "Recolher Medida"}</button>}
         <button onClick={() => setMoreActionsOpen((open) => !open)}>Mais ações</button>
         {moreActionsOpen && <div className="matrix-more-actions">{selectedMeasure && <><button onClick={transferMeasure}>Transferir Medida</button><button onClick={removeMeasure}>Excluir Medida</button></>}{selectedStructure && <button onClick={removeStructure}>Excluir Estrutura</button>}{document.organizationalUnits.find((item) => item.id === selected && item.kind === "business-unit") && <><button onClick={moveBu}>Transferir BU</button><button onClick={toggleBu}>Ativar/desativar BU</button></>}</div>}
         </section>
@@ -513,6 +560,7 @@ function Matrix() {
         </div>
       </section></aside>}
       {connectTarget && <aside className="relation-choice" aria-label="Escolher tipo de relação"><strong>Criar relação</strong><p><b>{diagnosisNameFor(document, connectOrigin)}</b> → <b>{diagnosisNameFor(document, connectTarget)}</b></p><label>Tipo<select aria-label="Tipo da relação" value={relationType} onChange={(event) => setRelationType(event.target.value as "hierarchy" | SemanticRelationType)}><option value="">Selecione o tipo</option><option value="hierarchy">Hierarquia — Superior → Filho</option><option value="hinders">Dificulta</option><option value="contributes-to">Contribui para</option><option value="depends-on">Depende de</option></select></label><div><button onClick={cancelConnect}>Cancelar</button><button className="primary" disabled={!relationType || relationBusy} onClick={saveRelation}>{relationBusy ? "Salvando…" : "Confirmar relação"}</button></div></aside>}
+      {hiddenRelationsFor && <aside className="hidden-relations-list" aria-label="Relações ocultas"><header><strong>Relações ocultas</strong><button aria-label="Fechar relações ocultas" onClick={() => setHiddenRelationsFor("")}>Fechar</button></header>{hiddenRelationItems.length ? <ul>{hiddenRelationItems.map((item) => <li key={`${item.kind}:${item.relationId}`}><strong>{diagnosisNameFor(document, item.relatedDiagnosisId)}</strong><small>{item.kind === "hierarchy" ? "Hierarquia" : item.kind === "hinders" ? "Dificulta" : item.kind === "contributes-to" ? "Contribui para" : "Depende de"} · {item.direction === "outgoing" ? "saída" : "entrada"}</small><span>{item.reasons.map((reason) => reason.kind === "hierarchy" ? "ramo recolhido" : reason.kind === "measure" ? "Medida recolhida" : reason.kind === "structure" ? "Estrutura recolhida" : "unidade inativa").join(", ")}</span><button onClick={() => revealDiagnosis(item.relatedDiagnosisId)}>Revelar</button></li>)}</ul> : <p>Não há relações ocultas para este diagnóstico.</p>}</aside>}
       {connectOrigin && !connectTarget && <p className="connect-status" role="status">{connectOrigin === "pending" ? "Conectar: selecione a origem." : `Conectar: ${diagnosisNameFor(document, connectOrigin)} selecionado. Selecione o destino.`}</p>}
       {error && <p className="matrix-error">{error}</p>}
       <div className={`matrix-flow${selectedDiagnosisItem ? " has-diagnosis-editor" : ""}`} onPointerCancel={() => { if (connectOrigin) cancelConnect(); }}>
