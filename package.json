@@ -1,0 +1,27 @@
+{
+  "name": "strategy-os-react-flow-editor",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "test:foundation": "tsx --test ../tests/diagnostic-foundation.test.ts",
+    "test": "npm run test:foundation && node ../tests/economic-matrix-e2e.cjs && node ../tests/economic-matrix-ordering-e2e.cjs && node ../tests/economic-matrix-migration-e2e.cjs && node ../tests/context-panel-e2e.cjs && node ../tests/connections.cjs && node ../tests/diagnosis-form-e2e.cjs && node ../tests/diagnosis-management-e2e.cjs && node ../tests/diagnosis-visual-e2e.cjs && node ../tests/diagnosis-relations-e2e.cjs && node ../tests/diagnosis-relations-management-e2e.cjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@xyflow/react": "12.12.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "6.1.2",
+    "tsx": "^4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.4"
+  }
+}
