@@ -13,7 +13,8 @@ export function AuditHistorySection({ document, events, emptyText }: { document:
   return (
     <section className="matrix-context-section audit-history-section" aria-label="Histórico">
       <details open={open} onToggle={(event) => setOpen(event.currentTarget.open)}>
-        <summary>Histórico <small>({events.length})</small></summary>
+        {/* The canvas reserves Space for panning and swallows the native <summary> activation, so Space is handled here (Enter stays native). */}
+        <summary onKeyDown={(event) => { if (event.key === " ") { event.preventDefault(); event.stopPropagation(); setOpen((value) => !value); } }}>Histórico <small>({events.length})</small></summary>
         {open && <AuditHistoryList views={views} label="Histórico de alterações" emptyText={emptyText} />}
       </details>
     </section>

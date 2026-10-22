@@ -1,6 +1,6 @@
 import { Background, Controls, MiniMap, ReactFlow, ReactFlowProvider, useReactFlow } from "@xyflow/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Diagnosis, DiagnosisDraft, DiagnosticDocument, EconomicMeasure, EconomicStructure, OrganizationalUnit, SemanticRelationType } from "./domain/model";
+import { DomainValidationError, type Diagnosis, type DiagnosisDraft, type DiagnosticDocument, type EconomicMeasure, type EconomicStructure, type OrganizationalUnit, type SemanticRelationType } from "./domain/model";
 import {
   createDiagnosisDraft,
   createEconomicMeasure,
@@ -49,7 +49,9 @@ import {
   saveMatrixPresentation,
 } from "./layout/presentationStorage";
 import { beginDiagnosisEditSession, recordDiagnosisEditSession, sealDiagnosisEditSession, sealOpenAuditSessions, type DiagnosisEditSession } from "./domain/auditSessions";
-import { loadDiagnosticDocument, saveDiagnosticDocument } from "./persistence/diagnosticStorage";
+import { exportDiagnosticDocument, loadDiagnosticDocument } from "./persistence/diagnosticStorage";
+import { GuardedDocumentStore, STALE_DOCUMENT_MESSAGE, StaleDocumentError, type LockManagerLike } from "./persistence/documentStore";
+import { StaleDocumentBanner } from "./StaleDocumentBanner";
 import { DiagnosisForm, type DiagnosisEditorValue } from "./DiagnosisForm";
 import { directParentOf } from "./domain/relations";
 import { auditHistoryForBusinessUnit } from "./domain/auditHistory";
@@ -69,7 +71,12 @@ const diagnosisNameFor = (document: DiagnosticDocument, itemId: string) => docum
 
 function Matrix() {
   // Editing sessions left open by a reload or closed tab are sealed in memory; the next write persists it.
-  const [loaded] = useState(() => { const result = loadDiagnosticDocument(localStorage); return { ...result, document: sealOpenAuditSessions(result.document) }; });
+  // The store remembers the exact stored version this tab is based on and refuses to overwrite a newer one saved by another tab.
+  const [loaded] = useState(() => { const result = loadDiagnosticDocument(localStorage); return { ...result, document: sealOpenAuditSessions(result.document), store: new GuardedDocumentStore(localStorage, result.raw, (typeof navigator !== "undefined" ? navigator.locks : undefined) as unknown as LockManagerLike | undefined) }; });
+  const documentStore = loaded.store;
+  const [stale, setStale] = useState(false);
+  const [staleDownloadError, setStaleDownloadError] = useState("");
+  const unloading = useRef(false);
   const [document, setDocument] = useState<DiagnosticDocument>(loaded.document);
   const [presentation, setPresentation] = useState<MatrixPresentation>(() =>
     loadMatrixPresentation(localStorage, loaded.document),
@@ -116,15 +123,17 @@ function Matrix() {
     if (!confirmed) return Promise.resolve(false);
     const revision = ++saveRevision.current;
     setDiagnosisSaveState("saving");
-    const persist = () => {
+    const persist = async () => {
       try {
-        setPersistedDocument(saveDiagnosticDocument(localStorage, snapshot));
+        // While the page is unloading the write must stay synchronous (a lock request could outlive the page).
+        setPersistedDocument(await documentStore.save(snapshot, { exclusive: !unloading.current }));
         if (revision === saveRevision.current) { setDiagnosisSaveState("saved"); setDiagnosisSaveError(""); }
         return true;
       } catch (cause) {
+        if (cause instanceof StaleDocumentError) setStale(true);
         if (revision === saveRevision.current) {
           setDiagnosisSaveState("error");
-          setDiagnosisSaveError(cause instanceof Error ? cause.message : "Não foi possível salvar no navegador.");
+          setDiagnosisSaveError(cause instanceof StaleDocumentError ? STALE_DOCUMENT_MESSAGE : cause instanceof Error ? cause.message : "Não foi possível salvar no navegador.");
         }
         return false;
       }
@@ -133,6 +142,8 @@ function Matrix() {
     saveQueue.current = queued.then(() => undefined);
     return queued;
   };
+  /** A write refused because another tab saved a newer version must say so, not just "could not save". */
+  const failureText = (fallback: string) => documentStore.stale ? STALE_DOCUMENT_MESSAGE : fallback;
   const applyDocument = (next: DiagnosticDocument) => {
     documentRef.current = next;
     setDocument(next);
@@ -149,14 +160,37 @@ function Matrix() {
     try { next = operation(previous); } catch (cause) { setError(cause instanceof Error ? cause.message : "Operação bloqueada"); return Promise.resolve(false); }
     return applyDocument(next).then((persisted) => {
       if (persisted) setError("");
-      else if (documentRef.current === next) { documentRef.current = previous; setDocument(previous); setError(failureMessage); }
+      else if (documentRef.current === next) { documentRef.current = previous; setDocument(previous); setError(failureText(failureMessage)); }
       return persisted;
     });
   };
   useEffect(() => { if (!wasConfirmed.current && confirmed) persistDocument(documentRef.current); wasConfirmed.current = confirmed; }, [confirmed]);
   useEffect(() => () => { editTimers.current.forEach(({ timer }) => clearTimeout(timer)); }, []);
   // A reload or closed tab must not lose the audited edit nor leave its session open.
-  useEffect(() => { const flush = () => closeAllSessions.current(); window.addEventListener("pagehide", flush); return () => window.removeEventListener("pagehide", flush); }, []);
+  useEffect(() => {
+    const flush = () => { unloading.current = true; closeAllSessions.current(); };
+    const restored = (event: PageTransitionEvent) => { if (event.persisted) unloading.current = false; };
+    // Another tab saved the document: this tab is now outdated. Warn immediately, before the user even tries to save.
+    const onStorage = (event: StorageEvent) => { if (documentStore.noteStorageEvent(event.key, event.newValue)) setStale(true); };
+    window.addEventListener("pagehide", flush);
+    window.addEventListener("pageshow", restored);
+    window.addEventListener("storage", onStorage);
+    return () => { window.removeEventListener("pagehide", flush); window.removeEventListener("pageshow", restored); window.removeEventListener("storage", onStorage); };
+  }, []);
+  /** Safe recovery: export the in-memory document (including the edits that could not be saved) as a validated JSON file. */
+  const downloadLocalChanges = () => {
+    try {
+      const blob = new Blob([exportDiagnosticDocument(documentRef.current)], { type: "application/json" });
+      const link = window.document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `strategy-os-alteracoes-locais-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+      window.document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      setStaleDownloadError("");
+    } catch (cause) { setStaleDownloadError(cause instanceof Error ? `Não foi possível gerar o arquivo: ${cause.message}` : "Não foi possível gerar o arquivo."); }
+  };
   useEffect(() => { const cancel = (event: KeyboardEvent) => { if (event.key === "Escape" && connectOrigin) cancelConnect(); }; window.addEventListener("keydown", cancel); return () => window.removeEventListener("keydown", cancel); }, [connectOrigin]);
 
   useEffect(() => {
@@ -339,18 +373,24 @@ function Matrix() {
         const diagnosis = source.diagnoses.find((item) => item.id === diagnosisId && !item.deletedAt);
         if (!draft && !diagnosis) return;
         let next: DiagnosticDocument;
+        let promotionRefusal = "";
         if (draft) {
           next = updateDiagnosisDraft(source, { ...draft, ...value, updatedAt: now } as DiagnosisDraft);
           const candidate = next.diagnosisDrafts?.find((item) => item.id === diagnosisId);
           const ready = candidate?.kind && candidate.title?.trim() && candidate.coverage?.length && (candidate.kind !== "ambition" || candidate.ambitionOrigin);
-          if (ready) next = promoteDiagnosisDraft(next, diagnosisId);
+          if (ready) {
+            // Only the promotion may be refused (for example legacy intersections pointing to a removed BU or Measure);
+            // the edit itself is valid and must still be saved as a draft instead of being discarded.
+            try { next = promoteDiagnosisDraft(next, diagnosisId); }
+            catch (cause) { if (!(cause instanceof DomainValidationError)) throw cause; promotionRefusal = cause.message; }
+          }
         } else {
           next = updateDiagnosis(source, { ...diagnosis!, ...value, updatedAt: now } as Diagnosis);
         }
         // Document change and its history event are produced together and persisted in one write.
         next = recordEditSession(source, next, diagnosisId);
         applyDocument(next);
-        setError("");
+        setError(promotionRefusal ? `Alterações salvas no rascunho, mas ele não pode ser posicionado na matriz: ${promotionRefusal} (dados antigos foram preservados).` : "");
       } catch (cause) {
         setDiagnosisSaveState("error");
         setDiagnosisSaveError(cause instanceof Error ? cause.message : "Não foi possível aplicar a alteração.");
@@ -394,7 +434,7 @@ function Matrix() {
         if (persisted) { cancelConnect(); return; }
         if (documentRef.current === next) { documentRef.current = previous; setDocument(previous); }
         setRelationBusy(false);
-        setError("Não foi possível salvar a relação. Revise e tente novamente.");
+        setError(failureText("Não foi possível salvar a relação. Revise e tente novamente."));
       });
     } catch (cause) { setRelationBusy(false); setError(cause instanceof Error ? cause.message : "Não foi possível criar a relação."); }
   };
@@ -472,6 +512,7 @@ function Matrix() {
         <button className={connectOrigin ? "primary" : ""} aria-pressed={Boolean(connectOrigin)} onClick={connectOrigin ? cancelConnect : activateConnect}>{connectOrigin ? "Cancelar conexão" : "Conectar"}</button>
         <button onClick={() => selectedDiagnosisItem ? frameDiagnosis(selectedDiagnosisItem.id) : flow.fitView({ padding: 0.15 })}>{selectedDiagnosisItem ? "Enquadrar abrangência" : "Enquadrar"}</button>
       </header>
+      {stale && <StaleDocumentBanner onDownload={downloadLocalChanges} onReload={() => window.location.reload()} downloadError={staleDownloadError} />}
       {!confirmed && (
         <aside>
           <b>Prévia de migração</b>

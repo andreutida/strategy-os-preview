@@ -294,3 +294,24 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 .audit-history-section .audit-change{grid-template-columns:1fr}
 @media(max-width:760px){.modal-backdrop{align-items:flex-end;padding:0}.modal,.modal.modal-wide{width:100%;max-height:88dvh;border-radius:18px 18px 0 0}.audit-change{grid-template-columns:1fr}}
 .matrix-v3 .modal>.modal-header{padding:0;gap:12px;border:0;background:transparent}.matrix-v3 .modal-header button{margin-left:0}
+/* Long unbroken titles/names (identifiers, URLs) must wrap inside panels and dialogs instead of widening and clipping them. */
+.audit-event,.audit-event p,.modal,.modal li,.modal p,.reorg-summary dd,.audit-affected{overflow-wrap:anywhere;word-break:break-word}
+/* Coverage grid cells keep their width: long unit/measure names are truncated (full name stays in aria-label and title). */
+.coverage-row>span{min-width:0;overflow-wrap:anywhere}
+.coverage-row button{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Tablet widths: the header (title + 6 commands, longer labels while selecting/connecting) must not widen the page. */
+@media(min-width:761px) and (max-width:1060px){.matrix-v3>header{gap:8px;padding:0 12px}.matrix-v3>header span{display:none}.matrix-v3>header strong{font-size:15px}.matrix-v3>header button{padding:0 10px;font-size:13px}}
+/* Incremento 7E.1: outdated-tab warning. */
+.matrix-v3 .stale-banner{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;padding:12px 20px;background:#fff4e5;border-bottom:2px solid #e8a33d;color:#5c3a05}
+.stale-banner strong{display:block;font-size:14px}.stale-banner p{margin:4px 0 0;font-size:13px;line-height:1.45;max-width:78ch;overflow-wrap:anywhere}
+.stale-banner .stale-banner-error{color:#9b1c1c}
+.stale-banner-actions{display:flex;gap:8px;flex-wrap:wrap}.stale-banner-actions button{min-height:38px}
+@media(min-width:761px){.matrix-v3 .matrix-context{top:calc(64px + var(--stale-offset,0px))}}
+/* The warning is drawn above the side panels and the panel never grows into it (matters on phones, where the panel is a bottom sheet). */
+.matrix-v3 .stale-banner{position:relative;z-index:60}
+@media(max-width:760px){
+  .matrix-v3 .stale-banner{padding:8px 12px;gap:8px}
+  .stale-banner strong{font-size:13px}.stale-banner p{font-size:12px;line-height:1.35}
+  .stale-banner-actions{width:100%}.stale-banner-actions button{flex:1 1 140px}
+  .matrix-v3 .matrix-context{max-height:min(70dvh,620px,calc(100dvh - var(--stale-offset,0px) - 118px))}
+}

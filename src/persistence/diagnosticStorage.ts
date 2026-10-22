@@ -6,7 +6,8 @@ export const DIAGNOSTIC_STORAGE_KEY = "strategyos-diagnosis-v3";
 export const LEGACY_STRATEGIC_MAP_STORAGE_KEY = "strategyos-strategic-map-v1";
 
 export interface StorageLike { getItem(key: string): string | null; setItem(key: string, value: string): void; }
-export interface LoadedDiagnosticDocument { document: DiagnosticDocument; source: "v3" | "legacy-migration" | "empty"; }
+/** `raw` is the exact string found under the v3 key (null when absent): it identifies the version this load is based on. */
+export interface LoadedDiagnosticDocument { document: DiagnosticDocument; source: "v3" | "legacy-migration" | "empty"; raw: string | null; }
 export class DiagnosticDocumentParseError extends Error {
   constructor(message: string) { super(message); this.name = "DiagnosticDocumentParseError"; }
 }
@@ -46,13 +47,16 @@ export function parseDiagnosticDocument(value: unknown, options: { allowLegacyPe
 
 export function loadDiagnosticDocument(storage: StorageLike): LoadedDiagnosticDocument {
   const current = storage.getItem(DIAGNOSTIC_STORAGE_KEY);
-  if (current) return { document: parseDiagnosticDocument(JSON.parse(current), { allowLegacyPendingAmbitions: true }), source: "v3" };
+  if (current) return { document: parseDiagnosticDocument(JSON.parse(current), { allowLegacyPendingAmbitions: true }), source: "v3", raw: current };
   const legacy = storage.getItem(LEGACY_STRATEGIC_MAP_STORAGE_KEY);
-  if (legacy) return { document: migrateLegacyStrategicMap(JSON.parse(legacy)), source: "legacy-migration" };
-  return { document: structuredClone(EMPTY_DIAGNOSTIC_DOCUMENT), source: "empty" };
+  if (legacy) return { document: migrateLegacyStrategicMap(JSON.parse(legacy)), source: "legacy-migration", raw: current };
+  return { document: structuredClone(EMPTY_DIAGNOSTIC_DOCUMENT), source: "empty", raw: current };
 }
 
-/** Writes only the new versioned key; the legacy document is never overwritten. */
+/**
+ * Low-level writer: validates and writes unconditionally. The application never calls it directly; every write of the v3
+ * document goes through GuardedDocumentStore, which refuses to overwrite a version it has not loaded.
+ */
 export function saveDiagnosticDocument(storage: StorageLike, document: DiagnosticDocument) {
   const validated = parseDiagnosticDocument(document, { allowLegacyPendingAmbitions: true });
   storage.setItem(DIAGNOSTIC_STORAGE_KEY, JSON.stringify(validated));
