@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/ux-f2b-matrix-navigation",
-    "commit": "3aa07a566ff93e39813af96be2350a816daf4bbe",
-    "commitDate": "2026-10-22T17:16:13+00:00",
-    "subject": "docs: UX-F2B — causas, correções, testes e riscos documentados"
+    "branch": "codex/ux-f2c1-matrix-grid",
+    "commit": "e3e5b68b95a9dd16193695e03ea1d59cac96457c",
+    "commitDate": "2026-10-22T18:02:59+00:00",
+    "subject": "docs: UX-F2C.1 — arquitetura, riscos e estado"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/index-8Dq9PqWJ.js",
-      "sha256": "cd465d12b31ad40e3c09fcb3109cd0b7df870853eb8274a63fcc128e1261900c",
-      "bytes": 521820
+      "path": "assets/index-MqiX1Ua5.css",
+      "sha256": "cf890df36a6a8f130f58aa6a74182380236095b36824e66a70cc4dd266ff77fe",
+      "bytes": 61480
     },
     {
-      "path": "assets/index-BNZgQlOh.css",
-      "sha256": "01140cf41176e7c676a1c944ff35ec142fc2ec70ae0e32639ad84a569350e982",
-      "bytes": 61034
+      "path": "assets/index-XV0zTGux.js",
+      "sha256": "964e3de2ac95758503f8563c7c27f0b2ef7f59e940a73850b1c582bd8971c3a8",
+      "bytes": 523475
     },
     {
       "path": "index.html",
-      "sha256": "596360190c2a3b882a1e6eef0817a37e916511e580ed00a6b2ad55897eb2e1f8",
+      "sha256": "a4e61745ed73fb395d04b91fdeaf5a142c7de6d3de41ce4d3652489bb5e0d589",
       "bytes": 806
     }
   ]
