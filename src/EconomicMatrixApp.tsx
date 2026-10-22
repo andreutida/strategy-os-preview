@@ -5,27 +5,30 @@ import {
   createDiagnosisDraft,
   createEconomicMeasure,
   createEconomicStructure,
-  createOrganizationalUnit,
-  deactivateBusinessUnit,
   deleteMeasure,
   deleteEmptyStructure,
-  reactivateBusinessUnit,
-  transferBusinessUnit,
   transferStructureMeasuresAndDelete,
   updateDiagnosis,
-  deleteDiagnosis,
   deleteDiagnosisDraft,
   promoteDiagnosisDraft,
   updateDiagnosisDraft,
   updateEconomicMeasure,
   updateEconomicStructure,
-  updateOrganizationalUnit,
-  setHierarchy,
-  createSemanticRelation,
-  updateSemanticRelation,
-  deleteSemanticRelation,
-  removeHierarchy,
 } from "./domain/commands";
+import {
+  auditedCreateOrganizationalUnit,
+  auditedCreateSemanticRelation,
+  auditedDeactivateBusinessUnit,
+  auditedDeleteDiagnosis,
+  auditedDeleteSemanticRelation,
+  auditedReactivateBusinessUnit,
+  auditedRemoveHierarchy,
+  auditedSetHierarchy,
+  auditedTransferBusinessUnit,
+  auditedUpdateOrganizationalUnit,
+  auditedUpdateSemanticRelation,
+  type AuditOperationContext,
+} from "./domain/auditedCommands";
 import { economicMatrixNodes } from "./flow/economicMatrixAdapter";
 import { diagnosisIdFromNodeId, diagnosisNodeTypes, diagnosisVisibleDocument, diagnosisVisualNodes } from "./flow/diagnosisVisualAdapter";
 import { diagnosisRelationEdges } from "./flow/diagnosisRelationAdapter";
@@ -45,9 +48,14 @@ import {
   sanitizeMatrixPresentation,
   saveMatrixPresentation,
 } from "./layout/presentationStorage";
+import { beginDiagnosisEditSession, recordDiagnosisEditSession, sealDiagnosisEditSession, sealOpenAuditSessions, type DiagnosisEditSession } from "./domain/auditSessions";
 import { loadDiagnosticDocument, saveDiagnosticDocument } from "./persistence/diagnosticStorage";
 import { DiagnosisForm, type DiagnosisEditorValue } from "./DiagnosisForm";
 import { directParentOf } from "./domain/relations";
+import { auditHistoryForBusinessUnit } from "./domain/auditHistory";
+import { AuditHistorySection } from "./history/AuditHistorySection";
+import { GeneralHistoryDialog } from "./history/GeneralHistoryDialog";
+import { ReorganizationDialog, type ReorganizationParams, type ReorganizationRequest } from "./ReorganizationDialog";
 
 const id = () => crypto.randomUUID?.() ?? `v3-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const nameFor = (document: DiagnosticDocument, itemId: string) =>
@@ -55,10 +63,13 @@ const nameFor = (document: DiagnosticDocument, itemId: string) =>
   document.measures.find((item) => item.id === itemId)?.name ??
   document.organizationalUnits.find((item) => item.id === itemId)?.name ??
   itemId;
+/** One business operation = one operation ID and one timestamp for every event it produces. */
+const auditContext = (): AuditOperationContext => ({ operationId: id(), occurredAt: new Date().toISOString() });
 const diagnosisNameFor = (document: DiagnosticDocument, itemId: string) => document.diagnoses.find((item) => item.id === itemId)?.title ?? itemId;
 
 function Matrix() {
-  const [loaded] = useState(() => loadDiagnosticDocument(localStorage));
+  // Editing sessions left open by a reload or closed tab are sealed in memory; the next write persists it.
+  const [loaded] = useState(() => { const result = loadDiagnosticDocument(localStorage); return { ...result, document: sealOpenAuditSessions(result.document) }; });
   const [document, setDocument] = useState<DiagnosticDocument>(loaded.document);
   const [presentation, setPresentation] = useState<MatrixPresentation>(() =>
     loadMatrixPresentation(localStorage, loaded.document),
@@ -85,11 +96,18 @@ function Matrix() {
   const [diagnosisSaveState, setDiagnosisSaveState] = useState<"saving" | "saved" | "error" | "idle">("idle");
   const [diagnosisSaveError, setDiagnosisSaveError] = useState("");
   const [hiddenRelationsFor, setHiddenRelationsFor] = useState("");
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [reorganization, setReorganization] = useState<ReorganizationRequest | null>(null);
+  const [reorganizationBusy, setReorganizationBusy] = useState(false);
+  // The history UI reads only what was actually written: updated after each successful write, never ahead of storage.
+  const [persistedDocument, setPersistedDocument] = useState<DiagnosticDocument>(loaded.document);
   const documentRef = useRef(document);
   const persistedVisibilityPresentation = useRef(visibilityPresentation);
   const saveQueue = useRef(Promise.resolve());
   const saveRevision = useRef(0);
-  const editTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  const editTimers = useRef(new Map<string, { timer: ReturnType<typeof setTimeout>; run: () => void }>());
+  const editSessions = useRef(new Map<string, DiagnosisEditSession>());
+  const closeAllSessions = useRef(() => {});
   const wasConfirmed = useRef(confirmed);
   const flow = useReactFlow();
 
@@ -100,7 +118,7 @@ function Matrix() {
     setDiagnosisSaveState("saving");
     const persist = () => {
       try {
-        saveDiagnosticDocument(localStorage, snapshot);
+        setPersistedDocument(saveDiagnosticDocument(localStorage, snapshot));
         if (revision === saveRevision.current) { setDiagnosisSaveState("saved"); setDiagnosisSaveError(""); }
         return true;
       } catch (cause) {
@@ -120,8 +138,25 @@ function Matrix() {
     setDocument(next);
     return persistDocument(next);
   };
+  /**
+   * Runs an audited operation as one transaction: the new document already carries its history events, so
+   * a single write persists both. If the write fails the whole operation (change and events) is undone in
+   * memory, which keeps the screen consistent with what was actually saved. Resolves to whether it persisted.
+   */
+  const commitOperation = (operation: (source: DiagnosticDocument) => DiagnosticDocument, failureMessage: string): Promise<boolean> => {
+    const previous = documentRef.current;
+    let next: DiagnosticDocument;
+    try { next = operation(previous); } catch (cause) { setError(cause instanceof Error ? cause.message : "Operação bloqueada"); return Promise.resolve(false); }
+    return applyDocument(next).then((persisted) => {
+      if (persisted) setError("");
+      else if (documentRef.current === next) { documentRef.current = previous; setDocument(previous); setError(failureMessage); }
+      return persisted;
+    });
+  };
   useEffect(() => { if (!wasConfirmed.current && confirmed) persistDocument(documentRef.current); wasConfirmed.current = confirmed; }, [confirmed]);
-  useEffect(() => () => { editTimers.current.forEach((timer) => clearTimeout(timer)); }, []);
+  useEffect(() => () => { editTimers.current.forEach(({ timer }) => clearTimeout(timer)); }, []);
+  // A reload or closed tab must not lose the audited edit nor leave its session open.
+  useEffect(() => { const flush = () => closeAllSessions.current(); window.addEventListener("pagehide", flush); return () => window.removeEventListener("pagehide", flush); }, []);
   useEffect(() => { const cancel = (event: KeyboardEvent) => { if (event.key === "Escape" && connectOrigin) cancelConnect(); }; window.addEventListener("keydown", cancel); return () => window.removeEventListener("keydown", cancel); }, [connectOrigin]);
 
   useEffect(() => {
@@ -171,15 +206,18 @@ function Matrix() {
 
   const create = () => {
     if (!name.trim()) return;
+    if (kind === "unit" || kind === "group") {
+      const unit = { id: id(), kind: kind === "group" ? "group" : "business-unit", name: name.trim(), active: true } as OrganizationalUnit;
+      commitOperation((source) => auditedCreateOrganizationalUnit(source, unit, auditContext()), "Não foi possível salvar a unidade. A criação foi desfeita.").then((persisted) => { if (persisted) setName(""); });
+      return;
+    }
     try {
       const next =
         kind === "structure"
           ? createEconomicStructure(document, { id: id(), name: name.trim(), description: "" } as EconomicStructure)
-          : kind === "measure"
-            ? parent
-              ? createEconomicMeasure(document, { id: id(), name: name.trim(), structureId: parent } as EconomicMeasure)
-              : (() => { throw new Error("Selecione uma Estrutura."); })()
-            : createOrganizationalUnit(document, { id: id(), kind: kind === "group" ? "group" : "business-unit", name: name.trim(), active: true } as OrganizationalUnit);
+          : parent
+            ? createEconomicMeasure(document, { id: id(), name: name.trim(), structureId: parent } as EconomicMeasure)
+            : (() => { throw new Error("Selecione uma Estrutura."); })();
       applyDocument(next);
       setName("");
       setError("");
@@ -188,95 +226,51 @@ function Matrix() {
     }
   };
 
-  const edit = () => {
-    const value = prompt("Novo nome", nameFor(document, selected));
-    if (!value?.trim()) return;
-    try {
-      const structure = document.structures.find((item) => item.id === selected);
-      const measure = document.measures.find((item) => item.id === selected);
-      const unit = document.organizationalUnits.find((item) => item.id === selected);
-      applyDocument(
-        structure
-          ? updateEconomicStructure(document, { ...structure, name: value })
-          : measure
-            ? updateEconomicMeasure(document, { ...measure, name: value })
-            : unit
-              ? updateOrganizationalUnit(document, { ...unit, name: value })
-              : document,
-      );
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Operação bloqueada");
-    }
-  };
-
-  const toggleBu = () => {
-    const unit = document.organizationalUnits.find((item) => item.id === selected);
-    if (!unit || unit.kind !== "business-unit") return;
-    applyDocument(unit.active ? deactivateBusinessUnit(document, unit.id) : reactivateBusinessUnit(document, unit.id));
-  };
-
-  const removeStructure = () => {
-    const structure = document.structures.find((item) => item.id === selected);
-    if (!structure) return;
-    const measures = document.measures.filter((item) => item.structureId === structure.id);
-    const destinations = document.structures.filter((item) => item.id !== structure.id);
-    if (measures.length && !destinations.length) {
-      setError("Não há outra Estrutura para receber as Medidas.");
-      return;
-    }
-    const destination = measures.length
-      ? prompt(`Transferir ${measures.length} Medida(s) para qual Estrutura?`, destinations[0]?.id)
-      : "";
-    if (measures.length && (!destination || !destinations.some((item) => item.id === destination))) return;
-    if (!confirm(measures.length ? "Confirmar transferência conjunta e exclusão da Estrutura?" : "Confirmar exclusão da Estrutura vazia?")) return;
-    try {
-      applyDocument(
-        measures.length
-          ? transferStructureMeasuresAndDelete(document, structure.id, destination!)
-          : deleteEmptyStructure(document, structure.id),
-      );
-      setSelected("");
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Operação bloqueada");
-    }
-  };
-
-  const moveBu = () => {
-    const source = document.organizationalUnits.find((item) => item.id === selected);
-    if (!source || source.kind !== "business-unit") return;
-    const options = document.organizationalUnits.filter((item) => item.kind === "business-unit" && item.id !== source.id);
-    if (!options.length) {
-      setError("Crie outra BU antes de transferir associações.");
-      return;
-    }
-    const affected = document.diagnoses.filter((diagnosis) =>
-      diagnosis.coverage.some((cell) => cell.organizationalUnitId === source.id),
-    ).length;
-    const destination = prompt(`${affected} diagnóstico(s) terão abrangências transferidas. Informe a BU destino:`, options[0].id);
-    if (!destination || !options.some((item) => item.id === destination) || !confirm("A BU de origem será removida após a transferência. Confirmar?")) return;
-    try {
-      applyDocument(transferBusinessUnit(document, source.id, destination));
-      setSelected("");
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Operação bloqueada");
-    }
-  };
-
-  const transferMeasure = () => {
-    const measure = document.measures.find((item) => item.id === selected);
-    if (!measure) return;
-    const destinations = document.structures.filter((item) => item.id !== measure.structureId);
-    if (!destinations.length) { setError("Crie outra Estrutura antes de transferir a Medida."); return; }
-    const destination = prompt("Informe a Estrutura de destino:", destinations[0].id);
-    if (!destination || !destinations.some((item) => item.id === destination) || !confirm("Confirmar transferência da Medida?")) return;
-    try { applyDocument(updateEconomicMeasure(document, { ...measure, structureId: destination })); setSelected(""); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : "Operação bloqueada"); }
-  };
-  const removeMeasure = () => {
-    const measure = document.measures.find((item) => item.id === selected);
-    if (!measure || !confirm("Excluir esta Medida? A operação será bloqueada se houver diagnósticos associados.")) return;
-    try { applyDocument(deleteMeasure(document, measure.id)); setSelected(""); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : "Operação bloqueada"); }
+  /** Every economic reorganization is confirmed in a contextual dialog; the operation itself is the existing (audited) domain command. */
+  const edit = () => { if (selected) openReorganization({ kind: "rename", targetId: selected }); };
+  const toggleBu = () => { if (selectedUnit?.kind === "business-unit") openReorganization({ kind: "business-unit-status", unitId: selectedUnit.id }); };
+  const removeStructure = () => { if (selected) openReorganization({ kind: "structure-remove", structureId: selected }); };
+  const moveBu = () => { if (selectedUnit?.kind === "business-unit") openReorganization({ kind: "business-unit-transfer", unitId: selectedUnit.id }); };
+  const transferMeasure = () => { if (selected) openReorganization({ kind: "measure-transfer", measureId: selected }); };
+  const removeMeasure = () => { if (selected) openReorganization({ kind: "measure-remove", measureId: selected }); };
+  const openReorganization = (request: ReorganizationRequest) => { setError(""); setReorganization(request); };
+  const closeReorganization = () => { if (!reorganizationBusy) { setReorganization(null); setError(""); } };
+  const confirmReorganization = (params: ReorganizationParams) => {
+    if (!reorganization || reorganizationBusy) return;
+    const request = reorganization;
+    const failure = "Não foi possível salvar a alteração. Nada foi aplicado; revise e tente novamente.";
+    const operation = (source: DiagnosticDocument): DiagnosticDocument => {
+      switch (request.kind) {
+        case "rename": {
+          const structure = source.structures.find((item) => item.id === request.targetId);
+          const measure = source.measures.find((item) => item.id === request.targetId);
+          const unit = source.organizationalUnits.find((item) => item.id === request.targetId);
+          if (structure) return updateEconomicStructure(source, { ...structure, name: params.name! });
+          if (measure) return updateEconomicMeasure(source, { ...measure, name: params.name! });
+          if (unit) return auditedUpdateOrganizationalUnit(source, { ...unit, name: params.name! }, auditContext());
+          throw new Error("O elemento não existe mais.");
+        }
+        case "business-unit-transfer": return auditedTransferBusinessUnit(source, request.unitId, params.destinationId!, auditContext());
+        case "business-unit-status": {
+          const unit = source.organizationalUnits.find((item) => item.id === request.unitId);
+          return unit?.active ? auditedDeactivateBusinessUnit(source, request.unitId, auditContext()) : auditedReactivateBusinessUnit(source, request.unitId, auditContext());
+        }
+        case "structure-remove": return source.measures.some((item) => item.structureId === request.structureId) ? transferStructureMeasuresAndDelete(source, request.structureId, params.destinationId!) : deleteEmptyStructure(source, request.structureId);
+        case "measure-transfer": {
+          const measure = source.measures.find((item) => item.id === request.measureId);
+          if (!measure) throw new Error("A Medida não existe mais.");
+          return updateEconomicMeasure(source, { ...measure, structureId: params.destinationId! });
+        }
+        case "measure-remove": return deleteMeasure(source, request.measureId);
+      }
+    };
+    setReorganizationBusy(true);
+    commitOperation(operation, failure).then((persisted) => {
+      setReorganizationBusy(false);
+      if (!persisted) return;
+      setReorganization(null);
+      if (request.kind !== "rename" && request.kind !== "business-unit-status") setSelected("");
+    });
   };
 
   const moveSelected = (delta: -1 | 1) => {
@@ -304,6 +298,7 @@ function Matrix() {
   const columnLabel = (column: string) => column === "structures" ? "Estruturas" : column === "measures" ? "Medidas" : nameFor(document, column);
   const selectedStructure = document.structures.find((item) => item.id === selected);
   const selectedMeasure = document.measures.find((item) => item.id === selected);
+  const selectedUnit = document.organizationalUnits.find((item) => item.id === selected);
   const toggleCollapsed = (kind: "structure" | "measure") => {
     const target = kind === "structure" ? selectedStructure?.id : selectedMeasure?.id;
     if (!target) return;
@@ -316,6 +311,25 @@ function Matrix() {
   const hiddenMeasureCount = selectedStructure ? document.measures.filter((item) => item.structureId === selectedStructure.id).length : 0;
   const hiddenDiagnosisCountForMeasure = selectedMeasure ? (visibility.hiddenDiagnosisIdsByMeasure[selectedMeasure.id] ?? []).length : 0;
   const selectedDiagnosisItem = document.diagnoses.find((item) => item.id === selectedDiagnosis && !item.deletedAt) ?? (document.diagnosisDrafts ?? []).find((item) => item.id === selectedDiagnosis && !item.deletedAt);
+  /** Folds an autosave into the diagnosis' editing session so the history gets one event per session. */
+  const recordEditSession = (source: DiagnosticDocument, next: DiagnosticDocument, diagnosisId: string) => {
+    let session = editSessions.current.get(diagnosisId);
+    if (!session) { session = beginDiagnosisEditSession(source, diagnosisId, id()); editSessions.current.set(diagnosisId, session); }
+    return recordDiagnosisEditSession(next, session, { occurredAt: new Date().toISOString() });
+  };
+  /** Ends the editing session: runs the pending autosave (unless discarded) and seals the session event. */
+  const closeEditSession = (diagnosisId: string, options: { discardPending?: boolean } = {}) => {
+    const pending = editTimers.current.get(diagnosisId);
+    if (pending) { clearTimeout(pending.timer); editTimers.current.delete(diagnosisId); if (!options.discardPending) pending.run(); }
+    const session = editSessions.current.get(diagnosisId);
+    editSessions.current.delete(diagnosisId);
+    if (!session) return;
+    const source = documentRef.current;
+    const sealed = sealDiagnosisEditSession(source, session);
+    if (sealed !== source) applyDocument(sealed);
+  };
+  closeAllSessions.current = () => new Set([...editTimers.current.keys(), ...editSessions.current.keys()]).forEach((diagnosisId) => closeEditSession(diagnosisId));
+  useEffect(() => { [...new Set([...editTimers.current.keys(), ...editSessions.current.keys()])].filter((diagnosisId) => diagnosisId !== selectedDiagnosis).forEach((diagnosisId) => closeEditSession(diagnosisId)); }, [selectedDiagnosis]);
   const updateDiagnosisEditor = (diagnosisId: string, value: DiagnosisEditorValue, mode: "debounced" | "immediate") => {
     const persistEdit = () => {
       try {
@@ -333,6 +347,8 @@ function Matrix() {
         } else {
           next = updateDiagnosis(source, { ...diagnosis!, ...value, updatedAt: now } as Diagnosis);
         }
+        // Document change and its history event are produced together and persisted in one write.
+        next = recordEditSession(source, next, diagnosisId);
         applyDocument(next);
         setError("");
       } catch (cause) {
@@ -341,13 +357,13 @@ function Matrix() {
       }
     };
     const pending = editTimers.current.get(diagnosisId);
-    if (pending) clearTimeout(pending);
+    if (pending) clearTimeout(pending.timer);
     if (mode === "immediate") {
       editTimers.current.delete(diagnosisId);
       persistEdit();
       return;
     }
-    editTimers.current.set(diagnosisId, setTimeout(() => { editTimers.current.delete(diagnosisId); persistEdit(); }, 320));
+    editTimers.current.set(diagnosisId, { timer: setTimeout(() => { editTimers.current.delete(diagnosisId); persistEdit(); }, 320), run: persistEdit });
   };
   const cancelConnect = () => { setConnectOrigin(""); setConnectTarget(""); setRelationType(""); setRelationBusy(false); };
   const activateConnect = () => { setSelected(""); setSelectedDiagnosis(""); setError(""); setConnectOrigin("pending"); };
@@ -369,9 +385,9 @@ function Matrix() {
         const existing = directParentOf(documentRef.current, target);
         const replacing = Boolean(existing && existing.parentId !== source);
         if (replacing && !confirm(`Este diagnóstico já possui superior. Substituir o vínculo atual por ${diagnosisNameFor(documentRef.current, source)}?`)) { setRelationBusy(false); return; }
-        next = setHierarchy(documentRef.current, { parentId: source, childId: target }, { replaceExistingParent: replacing });
+        next = auditedSetHierarchy(documentRef.current, { parentId: source, childId: target }, auditContext(), { replaceExistingParent: replacing });
       } else {
-        next = createSemanticRelation(documentRef.current, { id: id(), sourceDiagnosisId: source, targetDiagnosisId: target, type: relationType });
+        next = auditedCreateSemanticRelation(documentRef.current, { id: id(), sourceDiagnosisId: source, targetDiagnosisId: target, type: relationType }, auditContext());
       }
       const previous = documentRef.current;
       applyDocument(next).then((persisted) => {
@@ -382,16 +398,7 @@ function Matrix() {
       });
     } catch (cause) { setRelationBusy(false); setError(cause instanceof Error ? cause.message : "Não foi possível criar a relação."); }
   };
-  const mutateRelation = (operation: () => DiagnosticDocument) => {
-    try {
-      const previous = documentRef.current;
-      const next = operation();
-      applyDocument(next).then((persisted) => {
-        if (!persisted && documentRef.current === next) { documentRef.current = previous; setDocument(previous); setError("Não foi possível salvar a relação. A alteração foi desfeita."); }
-        else if (persisted) setError("");
-      });
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível alterar a relação."); }
-  };
+  const mutateRelation = (operation: (source: DiagnosticDocument) => DiagnosticDocument) => { commitOperation(operation, "Não foi possível salvar a relação. A alteração foi desfeita."); };
   const createDiagnosis = () => {
     try {
       const now = new Date().toISOString();
@@ -436,15 +443,14 @@ function Matrix() {
 
   const deleteSelectedDiagnosis = () => {
     if (!selectedDiagnosisItem || !confirm("Excluir logicamente este diagnóstico?")) return;
-    const timer = editTimers.current.get(selectedDiagnosisItem.id);
-    if (timer) { clearTimeout(timer); editTimers.current.delete(selectedDiagnosisItem.id); }
-    try {
-      const next = document.diagnoses.some((item) => item.id === selectedDiagnosisItem.id)
-        ? deleteDiagnosis(documentRef.current, selectedDiagnosisItem.id, new Date().toISOString())
-        : deleteDiagnosisDraft(documentRef.current, selectedDiagnosisItem.id, new Date().toISOString());
-      applyDocument(next);
-      setSelectedDiagnosis("");
-    } catch (cause) { setError(cause instanceof Error ? cause.message : "Não foi possível excluir."); }
+    closeEditSession(selectedDiagnosisItem.id, { discardPending: true });
+    const diagnosisId = selectedDiagnosisItem.id;
+    const isDiagnosis = documentRef.current.diagnoses.some((item) => item.id === diagnosisId);
+    // Drafts are not diagnoses and have no history; a diagnosis deletion is audited with the end of its relations.
+    commitOperation(
+      (source) => isDiagnosis ? auditedDeleteDiagnosis(source, diagnosisId, new Date().toISOString(), auditContext()) : deleteDiagnosisDraft(source, diagnosisId, new Date().toISOString()),
+      "Não foi possível salvar a exclusão. O diagnóstico foi mantido.",
+    ).then((persisted) => { if (persisted) setSelectedDiagnosis(""); });
   };
 
   const orderTitle = order?.scope === "structure"
@@ -462,6 +468,7 @@ function Matrix() {
         <span>{confirmed ? "Domínio v3" : "Prévia de migração v2"}</span>
         <button className="primary" onClick={() => { setCreateOpen((open) => !open); setSelected(""); }}>Novo elemento</button>
         <button onClick={createDiagnosis} disabled={connectOrigin !== ""}>Novo diagnóstico</button>
+        <button className="audit-open" onClick={() => setHistoryOpen(true)} disabled={connectOrigin !== ""}>Histórico geral</button>
         <button className={connectOrigin ? "primary" : ""} aria-pressed={Boolean(connectOrigin)} onClick={connectOrigin ? cancelConnect : activateConnect}>{connectOrigin ? "Cancelar conexão" : "Conectar"}</button>
         <button onClick={() => selectedDiagnosisItem ? frameDiagnosis(selectedDiagnosisItem.id) : flow.fitView({ padding: 0.15 })}>{selectedDiagnosisItem ? "Enquadrar abrangência" : "Enquadrar"}</button>
       </header>
@@ -498,10 +505,11 @@ function Matrix() {
         onClose={() => setSelectedDiagnosis("")}
         onDelete={deleteSelectedDiagnosis}
         onRetry={() => persistDocument(documentRef.current)}
+        auditDocument={persistedDocument}
         relations={{
-          onRemoveHierarchy: (parentId) => mutateRelation(() => removeHierarchy(documentRef.current, { parentId, childId: selectedDiagnosisItem.id })),
-          onUpdateSemantic: (relationId, type) => { const relation = documentRef.current.semanticRelations.find((item) => item.id === relationId); if (relation) mutateRelation(() => updateSemanticRelation(documentRef.current, { ...relation, type })); },
-          onDeleteSemantic: (relationId) => { if (confirm("Excluir esta relação semântica?")) mutateRelation(() => deleteSemanticRelation(documentRef.current, relationId)); },
+          onRemoveHierarchy: (parentId) => mutateRelation((source) => auditedRemoveHierarchy(source, { parentId, childId: selectedDiagnosisItem.id }, auditContext())),
+          onUpdateSemantic: (relationId, type) => { const relation = documentRef.current.semanticRelations.find((item) => item.id === relationId); if (relation) mutateRelation((source) => auditedUpdateSemanticRelation(source, { ...relation, type }, auditContext())); },
+          onDeleteSemantic: (relationId) => { if (confirm("Excluir esta relação semântica?")) mutateRelation((source) => auditedDeleteSemanticRelation(source, relationId, auditContext())); },
         }}
       />}
       {(document.diagnosisDrafts ?? []).filter((item) => !item.deletedAt).length > 0 && <aside className="diagnosis-list diagnosis-drafts" aria-label="Diagnósticos não posicionados"><span>Não posicionados</span>{(document.diagnosisDrafts ?? []).filter((item) => !item.deletedAt).map((item) => <button key={item.id} className="diagnosis-chip draft" onClick={() => { setSelectedDiagnosis(item.id); setSelected(""); }}><strong>{item.title?.trim() || "Diagnóstico sem título"}</strong><small>{item.kind === "ambition" ? "Ambição" : item.kind === "objection" ? "Objeção" : "Tipo não definido"}</small></button>)}</aside>}
@@ -558,11 +566,15 @@ function Matrix() {
           })}
           <button onClick={resetWidths}>Restaurar larguras padrão</button>
         </div>
-      </section></aside>}
+      </section>
+      {selectedUnit?.kind === "business-unit" && <AuditHistorySection document={persistedDocument} events={auditHistoryForBusinessUnit(persistedDocument, selectedUnit.id)} emptyText="Nenhuma alteração gravada para esta unidade." />}
+      </aside>}
+      {reorganization && <ReorganizationDialog request={reorganization} document={document} busy={reorganizationBusy} error={error} onCancel={closeReorganization} onConfirm={confirmReorganization} />}
+      {historyOpen && <GeneralHistoryDialog document={persistedDocument} onClose={() => setHistoryOpen(false)} />}
       {connectTarget && <aside className="relation-choice" aria-label="Escolher tipo de relação"><strong>Criar relação</strong><p><b>{diagnosisNameFor(document, connectOrigin)}</b> → <b>{diagnosisNameFor(document, connectTarget)}</b></p><label>Tipo<select aria-label="Tipo da relação" value={relationType} onChange={(event) => setRelationType(event.target.value as "hierarchy" | SemanticRelationType)}><option value="">Selecione o tipo</option><option value="hierarchy">Hierarquia — Superior → Filho</option><option value="hinders">Dificulta</option><option value="contributes-to">Contribui para</option><option value="depends-on">Depende de</option></select></label><div><button onClick={cancelConnect}>Cancelar</button><button className="primary" disabled={!relationType || relationBusy} onClick={saveRelation}>{relationBusy ? "Salvando…" : "Confirmar relação"}</button></div></aside>}
       {hiddenRelationsFor && <aside className="hidden-relations-list" aria-label="Relações ocultas"><header><strong>Relações ocultas</strong><button aria-label="Fechar relações ocultas" onClick={() => setHiddenRelationsFor("")}>Fechar</button></header>{hiddenRelationItems.length ? <ul>{hiddenRelationItems.map((item) => <li key={`${item.kind}:${item.relationId}`}><strong>{diagnosisNameFor(document, item.relatedDiagnosisId)}</strong><small>{item.kind === "hierarchy" ? "Hierarquia" : item.kind === "hinders" ? "Dificulta" : item.kind === "contributes-to" ? "Contribui para" : "Depende de"} · {item.direction === "outgoing" ? "saída" : "entrada"}</small><span>{item.reasons.map((reason) => reason.kind === "hierarchy" ? "ramo recolhido" : reason.kind === "measure" ? "Medida recolhida" : reason.kind === "structure" ? "Estrutura recolhida" : "unidade inativa").join(", ")}</span><button onClick={() => revealDiagnosis(item.relatedDiagnosisId)}>Revelar</button></li>)}</ul> : <p>Não há relações ocultas para este diagnóstico.</p>}</aside>}
       {connectOrigin && !connectTarget && <p className="connect-status" role="status">{connectOrigin === "pending" ? "Conectar: selecione a origem." : `Conectar: ${diagnosisNameFor(document, connectOrigin)} selecionado. Selecione o destino.`}</p>}
-      {error && <p className="matrix-error">{error}</p>}
+      {error && !reorganization && <p className="matrix-error">{error}</p>}
       <div className={`matrix-flow${selectedDiagnosisItem ? " has-diagnosis-editor" : ""}`} onPointerCancel={() => { if (connectOrigin) cancelConnect(); }}>
         <ReactFlow nodes={[...nodes, ...diagnosisNodes]} nodeTypes={diagnosisNodeTypes} edgeTypes={diagnosisEdgeTypes} edges={diagnosisEdges} fitView nodesDraggable={false} onNodeClick={(_, node) => { const diagnosisId = diagnosisIdFromNodeId(node.id); if (diagnosisId) { if (connectOrigin) { chooseRelationEndpoint(diagnosisId); return; } setSelectedDiagnosis(diagnosisId); setSelected(""); requestAnimationFrame(() => requestAnimationFrame(() => frameDiagnosis(diagnosisId))); return; } if (!connectOrigin) { setSelected(node.id); setMoreActionsOpen(false); } }} onPaneClick={() => { if (connectOrigin) setError("Selecione um cartão de diagnóstico válido para conectar."); }} onKeyDown={(event) => { if (event.key === "Escape" && connectOrigin) cancelConnect(); }}>
           <Background /><Controls /><MiniMap />

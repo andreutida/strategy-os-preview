@@ -1,4 +1,5 @@
 import { DomainValidationError, type CoverageIntersection, type Diagnosis, type DiagnosisDraft, type DiagnosticDocument, type EntityId, type HierarchyRelation, type OrganizationalUnit, type SemanticRelation } from "./model";
+import { measureUsage } from "./economicImpact";
 import { coverageKey, validateDiagnosticDocument } from "./validation";
 
 const clone = <T>(value: T): T => structuredClone(value);
@@ -104,7 +105,7 @@ export function deleteDiagnosis(document: DiagnosticDocument, diagnosisId: Entit
   const next = clone(document);
   const diagnosis = next.diagnoses.find((item) => item.id === diagnosisId);
   if (!diagnosis || diagnosis.deletedAt) return next;
-  // Keep the record for future recovery/history; active relations are removed.
+  // Logical deletion keeps the record for recovery; active relations are removed. The audited wrapper (auditedCommands) records the history.
   next.diagnoses = next.diagnoses.map((diagnosis) => diagnosis.id === diagnosisId ? { ...diagnosis, deletedAt, updatedAt: deletedAt } : diagnosis);
   next.hierarchies = next.hierarchies.filter((relation) => relation.parentId !== diagnosisId && relation.childId !== diagnosisId);
   next.semanticRelations = next.semanticRelations.filter((relation) => relation.sourceDiagnosisId !== diagnosisId && relation.targetDiagnosisId !== diagnosisId);
@@ -112,9 +113,18 @@ export function deleteDiagnosis(document: DiagnosticDocument, diagnosisId: Entit
   return assertValid(next);
 }
 
+/**
+ * A Measure referenced by any diagnosis (even partially, and even logically deleted ones, whose records are still
+ * validated against the matrix) or by a persistent draft cannot be deleted. Nothing is modified when blocked.
+ */
 export function deleteMeasure(document: DiagnosticDocument, measureId: EntityId) {
+  const usage = measureUsage(document, measureId);
+  const issues = [
+    ...(usage.diagnosisIds.length || usage.deletedDiagnosisIds.length ? [{ code: "measure-has-diagnoses", message: "Não é possível excluir uma medida com diagnósticos associados." }] : []),
+    ...(usage.draftIds.length ? [{ code: "measure-has-drafts", message: "Não é possível excluir uma medida referenciada por rascunhos de diagnóstico." }] : []),
+  ];
+  if (issues.length) throw new DomainValidationError(issues);
   const next = clone(document);
-  if (next.diagnoses.some((diagnosis) => diagnosis.coverage.some((cell) => cell.measureId === measureId))) throw new DomainValidationError([{ code: "measure-has-diagnoses", message: "Não é possível excluir uma medida com diagnósticos associados." }]);
   next.measures = next.measures.filter((measure) => measure.id !== measureId);
   return assertValid(next);
 }
@@ -135,16 +145,19 @@ export function transferBusinessUnit(document: DiagnosticDocument, sourceUnitId:
   const source = next.organizationalUnits.find((unit) => unit.id === sourceUnitId);
   const destination = next.organizationalUnits.find((unit) => unit.id === destinationUnitId);
   if (!source || !destination || source.kind !== "business-unit" || destination.kind !== "business-unit" || sourceUnitId === destinationUnitId) throw new DomainValidationError([{ code: "invalid-business-unit-transfer", message: "A transferência exige duas unidades de negócio distintas." }]);
-  next.diagnoses = next.diagnoses.map((diagnosis) => {
+  // Exact intersections move from the source to the destination; pairs that would repeat are consolidated.
+  const remapCoverage = (coverage: CoverageIntersection[]) => {
     const seen = new Set<string>();
-    const coverage = diagnosis.coverage.reduce<CoverageIntersection[]>((cells, cell) => {
+    return coverage.reduce<CoverageIntersection[]>((cells, cell) => {
       const moved = cell.organizationalUnitId === sourceUnitId ? { ...cell, organizationalUnitId: destinationUnitId } : cell;
       const key = coverageKey(moved.measureId, moved.organizationalUnitId);
       if (!seen.has(key)) { seen.add(key); cells.push(moved); }
       return cells;
     }, []);
-    return { ...diagnosis, coverage };
-  });
+  };
+  next.diagnoses = next.diagnoses.map((diagnosis) => ({ ...diagnosis, coverage: remapCoverage(diagnosis.coverage) }));
+  // Provisional intersections of drafts follow the same reorganization, but a draft is never promoted by it.
+  if (next.diagnosisDrafts) next.diagnosisDrafts = next.diagnosisDrafts.map((draft) => draft.coverage ? { ...draft, coverage: remapCoverage(draft.coverage) } : draft);
   next.organizationalUnits = next.organizationalUnits.filter((unit) => unit.id !== sourceUnitId);
   return assertValid(next);
 }

@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { AmbitionOrigin, CoverageIntersection, Diagnosis, DiagnosisDraft, DiagnosisKind, DiagnosticDocument, SemanticRelationType, ValidationStatus } from "./domain/model";
+import { auditHistoryForDiagnosis } from "./domain/auditHistory";
+import { AuditHistorySection } from "./history/AuditHistorySection";
 import { directChildrenOf, directParentOf, incomingSemanticRelationsOf, outgoingSemanticRelationsOf } from "./domain/relations";
 
 export interface DiagnosisEditorValue {
@@ -38,6 +40,7 @@ export function DiagnosisForm({
   onDelete,
   onRetry,
   relations,
+  auditDocument,
 }: {
   document: DiagnosticDocument;
   item: Diagnosis | DiagnosisDraft;
@@ -47,9 +50,12 @@ export function DiagnosisForm({
   onClose: () => void;
   onDelete: () => void;
   onRetry: () => void;
+  /** Last persisted snapshot: the history shown is never ahead of what was actually saved. */
+  auditDocument?: DiagnosticDocument;
   relations?: { onRemoveHierarchy: (parentId: string) => void; onUpdateSemantic: (relationId: string, type: SemanticRelationType) => void; onDeleteSemantic: (relationId: string) => void; };
 }) {
   const [value, setValue] = useState<DiagnosisEditorValue>(() => toEditorValue(item));
+  const auditEvents = useMemo(() => auditDocument ? auditHistoryForDiagnosis(auditDocument, item.id) : [], [auditDocument, item.id]);
   useEffect(() => setValue(toEditorValue(item)), [item.id, "coverage" in item ? item.coverage : undefined, item.updatedAt]);
   const update = (patch: Partial<DiagnosisEditorValue>, mode: "debounced" | "immediate" = "debounced") => {
     setValue((current) => {
@@ -89,6 +95,9 @@ export function DiagnosisForm({
     {!isDraft && relations && <section className="matrix-context-section diagnosis-relations"><h2>Relações</h2>{(() => { const parent = directParentOf(document, item.id); const children = directChildrenOf(document, item.id); const incoming = incomingSemanticRelationsOf(document, item.id); const outgoing = outgoingSemanticRelationsOf(document, item.id); const title = (id: string) => document.diagnoses.find((diagnosis) => diagnosis.id === id)?.title ?? id; return <><div><strong>Superior direto</strong>{parent ? <p>{title(parent.parentId)} <button onClick={() => relations.onRemoveHierarchy(parent.parentId)}>Remover vínculo</button></p> : <p>Sem superior.</p>}</div><div><strong>Filhos diretos</strong>{children.length ? <ul>{children.map((relation) => <li key={relation.childId}>{title(relation.childId)}</li>)}</ul> : <p>Sem filhos.</p>}</div><div><strong>Associações de saída</strong>{outgoing.length ? <ul>{outgoing.map((relation) => <li key={relation.id}>{relation.type} → {title(relation.targetDiagnosisId)} <select aria-label={`Tipo da relação ${relation.id}`} value={relation.type} onChange={(event) => relations.onUpdateSemantic(relation.id, event.target.value as SemanticRelationType)}><option value="hinders">Dificulta</option><option value="contributes-to">Contribui para</option><option value="depends-on">Depende de</option></select><button onClick={() => relations.onDeleteSemantic(relation.id)}>Excluir</button></li>)}</ul> : <p>Sem associações de saída.</p>}</div><div><strong>Associações de entrada</strong>{incoming.length ? <ul>{incoming.map((relation) => <li key={relation.id}>{title(relation.sourceDiagnosisId)} → {relation.type}</li>)}</ul> : <p>Sem associações de entrada.</p>}</div></>; })()}</section>}
     <section className="matrix-context-section"><h2>Fundamentação</h2>{([['Evidências', 'evidence'], ['Causas', 'causes'], ['Consequências', 'consequences']] as const).map(([label, field]) => <label key={field}>{label} <small>Uma por linha, opcional</small><textarea aria-label={label} value={(value[field] ?? []).join("\n")} onChange={(event) => update({ [field]: lines(event.target.value) })}/></label>)}</section>
     <section className="matrix-context-section"><h2>Abrangência</h2><p>Selecione exatamente as células que fazem parte deste diagnóstico.</p><div className="coverage-grid" role="grid">{document.structures.map((structure) => <div key={structure.id} className="coverage-structure"><strong>{structure.name}</strong>{document.measures.filter((measure) => measure.structureId === structure.id).map((measure) => <div className="coverage-row" key={measure.id}><span>{measure.name}</span>{activeUnits.map((unit) => { const cell = { measureId: measure.id, organizationalUnitId: unit.id }; const selected = coverage.some((entry) => key(entry) === key(cell)); return <button key={unit.id} aria-label={`${measure.name} × ${unit.name}`} aria-pressed={selected} onClick={() => toggle(cell)}>{unit.name}</button>; })}</div>)}</div>)}</div></section>
+    {auditDocument && (isDraft
+      ? <section className="matrix-context-section audit-history-section" aria-label="Histórico"><h2>Histórico</h2><p className="audit-empty">Rascunhos não têm histórico; o registro começa quando o diagnóstico é promovido.</p></section>
+      : <AuditHistorySection document={auditDocument} events={auditEvents} emptyText="Nenhuma alteração gravada para este diagnóstico." />)}
     <section className="matrix-context-section diagnosis-delete"><h2>Mais ações</h2><button className="danger" onClick={onDelete}>Excluir diagnóstico</button></section>
   </aside>;
 }

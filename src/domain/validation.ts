@@ -1,4 +1,5 @@
 import type { DiagnosticDocument, DomainIssue, EntityId, HierarchyRelation } from "./model";
+import { validateAuditHistory } from "./auditHistory";
 
 const unique = (values: string[]) => new Set(values).size === values.length;
 const pairKey = (measureId: string, organizationalUnitId: string) => `${measureId}\u0000${organizationalUnitId}`;
@@ -58,6 +59,7 @@ export function validateDiagnosticDocument(document: DiagnosticDocument, options
   });
   if (!unique(document.semanticRelations.map((relation) => relation.id))) issues.push({ code: "duplicate-semantic-relation-id", message: "Há identificadores de relação semântica duplicados." });
   if (!unique(document.semanticRelations.map((relation) => semanticRelationKey(relation.sourceDiagnosisId, relation.targetDiagnosisId, relation.type)))) issues.push({ code: "duplicate-semantic-relation", message: "A mesma relação semântica não pode ser registrada mais de uma vez." });
+  issues.push(...validateAuditHistory(document.history));
   return issues;
 }
 

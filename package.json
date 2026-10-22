@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
-    "test:foundation": "tsx --test ../tests/diagnostic-foundation.test.ts",
-    "test": "npm run test:foundation && node ../tests/economic-matrix-e2e.cjs && node ../tests/economic-matrix-ordering-e2e.cjs && node ../tests/economic-matrix-migration-e2e.cjs && node ../tests/context-panel-e2e.cjs && node ../tests/connections.cjs && node ../tests/diagnosis-form-e2e.cjs && node ../tests/diagnosis-management-e2e.cjs && node ../tests/diagnosis-visual-e2e.cjs && node ../tests/diagnosis-relations-e2e.cjs && node ../tests/diagnosis-relations-management-e2e.cjs && node ../tests/diagnosis-visibility-e2e.cjs",
+    "test:foundation": "tsx --test ../tests/diagnostic-foundation.test.ts ../tests/audit-transactions.test.ts ../tests/audit-sessions.test.ts ../tests/economic-integrity.test.ts ../tests/audit-presentation.test.ts",
+    "test": "npm run test:foundation && node ../tests/economic-matrix-e2e.cjs && node ../tests/economic-matrix-ordering-e2e.cjs && node ../tests/economic-matrix-migration-e2e.cjs && node ../tests/context-panel-e2e.cjs && node ../tests/connections.cjs && node ../tests/diagnosis-form-e2e.cjs && node ../tests/diagnosis-management-e2e.cjs && node ../tests/diagnosis-visual-e2e.cjs && node ../tests/diagnosis-relations-e2e.cjs && node ../tests/diagnosis-relations-management-e2e.cjs && node ../tests/diagnosis-visibility-e2e.cjs && node ../tests/audit-history-e2e.cjs && node ../tests/audit-reorganization-e2e.cjs && node ../tests/audit-history-ui-e2e.cjs && node ../tests/reorganization-dialogs-e2e.cjs",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -82,6 +82,76 @@ export interface LegacyReviewItem {
   raw: unknown;
 }
 
+export type AuditEntityKind = "diagnosis" | "business-unit" | "hierarchy" | "semantic-relation";
+
+export interface AuditEntityReference {
+  kind: AuditEntityKind;
+  id: EntityId;
+}
+
+export interface DiagnosisAuditProjection {
+  entityType: "diagnosis";
+  id: EntityId;
+  kind: DiagnosisKind;
+  title: string;
+  description?: string;
+  evidence?: string[];
+  causes?: string[];
+  consequences?: string[];
+  ambitionOrigin?: AmbitionOrigin;
+  validationStatus?: ValidationStatus;
+  coverage: CoverageIntersection[];
+  deletedAt?: string;
+}
+
+export interface BusinessUnitAuditProjection {
+  entityType: "business-unit";
+  id: EntityId;
+  name: string;
+  active: boolean;
+}
+
+export interface HierarchyAuditProjection {
+  entityType: "hierarchy";
+  parentId: EntityId;
+  childId: EntityId;
+}
+
+export interface SemanticRelationAuditProjection {
+  entityType: "semantic-relation";
+  id: EntityId;
+  sourceDiagnosisId: EntityId;
+  targetDiagnosisId: EntityId;
+  type: SemanticRelationType;
+}
+
+export type AuditProjection = DiagnosisAuditProjection | BusinessUnitAuditProjection | HierarchyAuditProjection | SemanticRelationAuditProjection;
+
+/** Metadata intentionally has a small, serializable contract; it is not a free-form event payload. */
+export interface AuditEventMetadata {
+  reason?: string;
+  affectedDiagnosisIds?: EntityId[];
+  session?: { id: string; state: "open" | "confirmed" };
+}
+
+export type AuditEventType =
+  | "diagnosis.created" | "diagnosis.updated" | "diagnosis.coverage-changed" | "diagnosis.ambition-governance-changed" | "diagnosis.deleted"
+  | "hierarchy.created" | "hierarchy.removed" | "hierarchy.parent-replaced"
+  | "semantic.created" | "semantic.type-changed" | "semantic.deleted"
+  | "business-unit.created" | "business-unit.renamed" | "business-unit.coverage-transferred" | "business-unit.deactivated" | "business-unit.reactivated";
+
+export interface AuditEvent {
+  id: EntityId;
+  /** Groups the changes that belong to one atomic business operation. */
+  operationId: EntityId;
+  occurredAt: string;
+  type: AuditEventType;
+  subjects: AuditEntityReference[];
+  before?: AuditProjection;
+  after?: AuditProjection;
+  metadata?: AuditEventMetadata;
+}
+
 export interface DiagnosticDocument {
   version: 3;
   structures: EconomicStructure[];
@@ -92,6 +162,8 @@ export interface DiagnosticDocument {
   diagnosisDrafts?: DiagnosisDraft[];
   hierarchies: HierarchyRelation[];
   semanticRelations: SemanticRelation[];
+  /** Optional only for compatibility with documents written before Incremento 7. */
+  history?: AuditEvent[];
   /** Preserved, non-interpreted legacy records that need a product decision. */
   legacyReviewItems: LegacyReviewItem[];
 }
@@ -105,6 +177,7 @@ export const EMPTY_DIAGNOSTIC_DOCUMENT: DiagnosticDocument = {
   diagnosisDrafts: [],
   hierarchies: [],
   semanticRelations: [],
+  history: [],
   legacyReviewItems: [],
 };
 

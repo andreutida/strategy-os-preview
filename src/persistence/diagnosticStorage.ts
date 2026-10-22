@@ -18,9 +18,10 @@ const fail = (message: string): never => { throw new DiagnosticDocumentParseErro
 
 function assertExternalShape(value: unknown): asserts value is DiagnosticDocument {
   if (isRecord(value) && value.diagnosisDrafts === undefined) value.diagnosisDrafts = [];
+  if (isRecord(value) && value.history === undefined) value.history = [];
   if (!isRecord(value) || value.version !== 3) fail("Documento de Diagnóstico inválido ou incompatível.");
   const record = value as Record<string, unknown>;
-  const arrays = ["structures", "measures", "organizationalUnits", "diagnoses", "diagnosisDrafts", "hierarchies", "semanticRelations", "legacyReviewItems"] as const;
+  const arrays = ["structures", "measures", "organizationalUnits", "diagnoses", "diagnosisDrafts", "hierarchies", "semanticRelations", "history", "legacyReviewItems"] as const;
   if (arrays.some((key) => !Array.isArray(record[key]))) fail("Documento de Diagnóstico incompleto.");
   if (!(record.structures as unknown[]).every((item) => isRecord(item) && hasString(item, "id") && hasString(item, "name") && hasString(item, "description"))) fail("Estruturas em formato inválido.");
   if (!(record.measures as unknown[]).every((item) => isRecord(item) && hasString(item, "id") && hasString(item, "name") && hasString(item, "structureId"))) fail("Medidas em formato inválido.");
@@ -29,12 +30,15 @@ function assertExternalShape(value: unknown): asserts value is DiagnosticDocumen
   if (!(record.diagnosisDrafts as unknown[]).every((item) => isRecord(item) && hasString(item, "id") && hasString(item, "createdAt") && hasString(item, "updatedAt"))) fail("Rascunhos de diagnóstico em formato inválido.");
   if (!(record.hierarchies as unknown[]).every((item) => isRecord(item) && hasString(item, "parentId") && hasString(item, "childId"))) fail("Hierarquias em formato inválido.");
   if (!(record.semanticRelations as unknown[]).every((item) => isRecord(item) && hasString(item, "id") && hasString(item, "sourceDiagnosisId") && hasString(item, "targetDiagnosisId") && hasString(item, "type"))) fail("Relações semânticas em formato inválido.");
+  if (!(record.history as unknown[]).every((item) => isRecord(item) && hasString(item, "id") && hasString(item, "operationId") && hasString(item, "occurredAt") && hasString(item, "type") && Array.isArray(item.subjects) && (item.subjects as unknown[]).every((subject) => isRecord(subject) && hasString(subject, "kind") && hasString(subject, "id")) && (item.before === undefined || isRecord(item.before)) && (item.after === undefined || isRecord(item.after)) && (item.metadata === undefined || isRecord(item.metadata)))) fail("Histórico estratégico em formato inválido.");
   if (!(record.legacyReviewItems as unknown[]).every((item) => isRecord(item) && hasString(item, "id") && hasString(item, "reason") && Object.hasOwn(item, "raw"))) fail("Pendências legadas em formato inválido.");
 }
 
 export function parseDiagnosticDocument(value: unknown, options: { allowLegacyPendingAmbitions?: boolean } = {}): DiagnosticDocument {
-  assertExternalShape(value);
-  const document = value;
+  // Normalize a clone so import/validation never mutates the caller's document.
+  const normalized = structuredClone(value);
+  assertExternalShape(normalized);
+  const document = normalized;
   const issues = validateDiagnosticDocument(document, options);
   if (issues.length) throw new DiagnosticDocumentParseError(`Documento de Diagnóstico inválido: ${issues.map((issue) => issue.code).join(", ")}`);
   return structuredClone(document);
