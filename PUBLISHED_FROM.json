@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "main",
-    "commit": "cd7270653ca6002b803f65fdcefd40d6af8fe99a",
-    "commitDate": "2026-10-22T10:18:10-03:00",
-    "subject": "merge: integrate Incremento 7 governance and history"
+    "branch": "codex/ux-f1-matrix-visual-base",
+    "commit": "0a1153c4fc3e24cf0d453042cc9583e4459968e6",
+    "commitDate": "2026-10-22T14:51:44+00:00",
+    "subject": "docs: UX-F1 — causas, correções, testes e pendências"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/index-BPdpStJp.js",
-      "sha256": "7c083c4dd3215c1a63b9e281657649181ce63be005a13c219412663859615ead",
-      "bytes": 512978
+      "path": "assets/index-CC8_3LG-.js",
+      "sha256": "9e8fa1ce58d19b894a0b8432fabee20a1ecaecdf7de0c959e8e5e750856c5a95",
+      "bytes": 517412
     },
     {
-      "path": "assets/index-Cajml-Lb.css",
-      "sha256": "eacae8eac807ac9531f0b2b1fb6b7a4ed3e129c47f2bc546b798a4bd6bee67f0",
-      "bytes": 56778
+      "path": "assets/index-CQ6mSls9.css",
+      "sha256": "d2f5bcedd74274ba0885cc0d74b326aeef8ee6af70d4fbbac8003ef7c9a3cb12",
+      "bytes": 59920
     },
     {
       "path": "index.html",
-      "sha256": "cbaa638fec3fd233480753a0a6ac1868564b2f050674ef214ef7ff089071785e",
+      "sha256": "b2a57a9330242bca24082793d9b00df931caf05d5e2f5b8e15cf7cbc09ab069a",
       "bytes": 806
     }
   ]
