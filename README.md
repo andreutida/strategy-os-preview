@@ -1,28 +1,13 @@
-# Diagnóstico do Strategy OS
+# Strategy OS — prévia publicada
 
-Aplicação React Flow publicada como experiência principal do Strategy OS em `/editor/`.
+Este repositório contém **somente o aplicativo já compilado** (HTML, JavaScript e CSS estáticos) do Strategy OS, servido pelo GitHub Pages em:
 
-## Desenvolvimento
+https://andreutida.github.io/strategy-os-preview/
 
-```bash
-npm ci --cache /tmp/strategy-os-npm-cache
-npm run dev
-npm run typecheck
-npm run build
-```
+O código-fonte, os testes e a documentação interna ficam em um repositório privado. **Não edite nada aqui manualmente**: o conteúdo é gerado e enviado por um procedimento de publicação que exige autorização explícita para cada versão.
 
-O build é gravado em `../editor/` para publicação estática pelo GitHub Pages. Não edite manualmente os assets gerados.
+## Rastreabilidade
 
-## Dados
+`PUBLISHED_FROM.json` informa o commit do repositório privado que originou o que está publicado e o SHA-256 de cada arquivo. O workflow de deploy confere esses valores antes de publicar; nada é compilado aqui.
 
-O diagnóstico usa a chave local `strategyos-strategic-map-v1` e o documento versão 2. `matrixType` distingue estruturas econômicas, medidas econômicas, unidades de negócio e diagnósticos. Um diagnóstico guarda `measureId`, `businessUnitId` e a categoria `ambition` ou `objection`. `cascadeOrder` controla a ordem da linha ou coluna e `parentBlockId` liga obrigatoriamente uma medida à sua estrutura. O carregador converte documentos anteriores sem apagar a chave local.
-
-## Teste de navegador
-
-Na raiz do repositório:
-
-```bash
-node tests/react-flow-editor.cjs
-```
-
-O teste cobre os três eixos estruturais, centralização do pai no intervalo dos filhos, expansão e recolhimento com compactação vertical, diagnósticos nas interseções, categorias e cores, sobreposição permitida de setas, saída pela direita, entrada superior nas unidades de negócio, contato perpendicular, persistência e fluxo em desktop e viewport móvel.
+Os dados do usuário ficam apenas no `localStorage` do navegador de cada pessoa; nenhum dado é enviado a servidores.

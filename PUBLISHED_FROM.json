@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "application": "Strategy OS",
+  "source": {
+    "repository": "andreutida/strategy-os-",
+    "branch": "main",
+    "commit": "cd7270653ca6002b803f65fdcefd40d6af8fe99a",
+    "commitDate": "2026-10-22T10:18:10-03:00",
+    "subject": "merge: integrate Incremento 7 governance and history"
+  },
+  "build": {
+    "directory": "react-flow-editor",
+    "command": "npm ci --ignore-scripts && npm run build",
+    "pathBase": "./"
+  },
+  "files": [
+    {
+      "path": "assets/index-BPdpStJp.js",
+      "sha256": "7c083c4dd3215c1a63b9e281657649181ce63be005a13c219412663859615ead",
+      "bytes": 512978
+    },
+    {
+      "path": "assets/index-Cajml-Lb.css",
+      "sha256": "eacae8eac807ac9531f0b2b1fb6b7a4ed3e129c47f2bc546b798a4bd6bee67f0",
+      "bytes": 56778
+    },
+    {
+      "path": "index.html",
+      "sha256": "cbaa638fec3fd233480753a0a6ac1868564b2f050674ef214ef7ff089071785e",
+      "bytes": 806
+    }
+  ]
+}

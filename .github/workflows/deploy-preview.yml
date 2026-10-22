@@ -1,3 +1,5 @@
+# Managed file: generated from andreutida/strategy-os- (deploy/preview/deploy-preview.yml) by scripts/publish-preview.mjs.
+# Publishes the already compiled application. Nothing is built here: the bytes served are the bytes committed.
 name: Deploy preview to GitHub Pages
 
 on:
@@ -15,22 +17,41 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  stage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: package-lock.json
-      - run: npm ci
-      - run: npm run build
+      - name: Verify files against PUBLISHED_FROM.json and stage the site
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from "node:crypto";
+          import { cpSync, mkdirSync, readFileSync, readdirSync, statSync } from "node:fs";
+          import { dirname, join } from "node:path";
+          const provenance = JSON.parse(readFileSync("PUBLISHED_FROM.json", "utf8"));
+          const allowed = [/^index\.html$/, /^assets\/[A-Za-z0-9_.-]+\.(js|css)$/];
+          const walk = (dir, base = "") => readdirSync(dir).flatMap((name) => {
+            const relative = base ? `${base}/${name}` : name;
+            return statSync(join(dir, name)).isDirectory() ? walk(join(dir, name), relative) : [relative];
+          });
+          const site = [...walk("assets").map((name) => `assets/${name}`), "index.html"].sort();
+          const listed = provenance.files.map((file) => file.path).sort();
+          const problems = [];
+          if (JSON.stringify(site) !== JSON.stringify(listed)) problems.push(`file list differs from PUBLISHED_FROM.json: ${site} != ${listed}`);
+          for (const file of provenance.files) {
+            if (!allowed.some((rule) => rule.test(file.path))) problems.push(`not allowed: ${file.path}`);
+            const digest = createHash("sha256").update(readFileSync(file.path)).digest("hex");
+            if (digest !== file.sha256) problems.push(`hash mismatch: ${file.path}`);
+          }
+          if (problems.length) { console.error(problems.join("\n")); process.exit(1); }
+          for (const file of provenance.files) { mkdirSync(dirname(join("_site", file.path)), { recursive: true }); cpSync(file.path, join("_site", file.path)); }
+          cpSync("PUBLISHED_FROM.json", "_site/PUBLISHED_FROM.json");
+          console.log(`Staged ${provenance.files.length} files from ${provenance.source.repository}@${provenance.source.commit}`);
+          NODE
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: editor
+          path: _site
   deploy:
-    needs: build
+    needs: stage
     runs-on: ubuntu-latest
     environment:
       name: github-pages
