@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/ux-f3-diagnosis-reading",
-    "commit": "86dc4506c65cf99e2fd95c741805a032520384f8",
-    "commitDate": "2026-10-23T11:55:07+00:00",
-    "subject": "docs: UX-F3 — regra definitiva do modo foco (rede completa)"
+    "branch": "codex/ux-f4-interaction-productivity",
+    "commit": "716f6de6258906f7fa457e42e0b66eaa420cacf8",
+    "commitDate": "2026-10-23T14:16:44+00:00",
+    "subject": "docs: UX-F4 — validação final, mutações, integridade e roteiro de homologação"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/index-BG1e1NAx.css",
-      "sha256": "f5c81c8c5e95414577f2334337f49368292e78e8ebea05dff1df57b381686470",
-      "bytes": 65122
+      "path": "assets/index-Dl5IWhCj.js",
+      "sha256": "3a46bbf2729e5d9db3811a84fc66473b48771faf78a86cb76c7d41960d62eea9",
+      "bytes": 551169
     },
     {
-      "path": "assets/index-BWk5ReUO.js",
-      "sha256": "205383790bbe4b22f0221320e28d122dd5bb748de0d1a9d05cd4142cc95ad1c1",
-      "bytes": 534363
+      "path": "assets/index-M5Hb0rSd.css",
+      "sha256": "a5f224d3ae9c9278f759071f586b06078616ef3dbecffbb96f9b5f5d642e6a9d",
+      "bytes": 71727
     },
     {
       "path": "index.html",
-      "sha256": "1f0a42ee6d3fa57a31293538312b61682cff0a6ff2d3d172bbad18e328e2ae08",
+      "sha256": "c5d1ae387b73f545f718420f3a1eb678155a1ab45bc6c05395d74a18569faf72",
       "bytes": 806
     }
   ]
