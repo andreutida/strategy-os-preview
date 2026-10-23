@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/ux-f4-interaction-productivity",
-    "commit": "716f6de6258906f7fa457e42e0b66eaa420cacf8",
-    "commitDate": "2026-10-23T14:16:44+00:00",
-    "subject": "docs: UX-F4 — validação final, mutações, integridade e roteiro de homologação"
+    "branch": "codex/ux-f5-finish-stability",
+    "commit": "2a38235551b003c5f8159985d40453ade4d7a87d",
+    "commitDate": "2026-10-23T18:17:49+00:00",
+    "subject": "feat(matrix): UX-F5 ajustes aprovados — menu Mais no cabeçalho compacto (alternativa B) e ajuda de Revelar/Localizar (alternativa D)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/index-Dl5IWhCj.js",
-      "sha256": "3a46bbf2729e5d9db3811a84fc66473b48771faf78a86cb76c7d41960d62eea9",
-      "bytes": 551169
+      "path": "assets/index-BAvi2An4.css",
+      "sha256": "c136c0d9d91d159c928dcea4db282eef6caddbfda70f14a0de02924ca1a86d4d",
+      "bytes": 78394
     },
     {
-      "path": "assets/index-M5Hb0rSd.css",
-      "sha256": "a5f224d3ae9c9278f759071f586b06078616ef3dbecffbb96f9b5f5d642e6a9d",
-      "bytes": 71727
+      "path": "assets/index-ma6mOtSu.js",
+      "sha256": "28aa81d54602182ff671febbcb2aeac5f7f2fdc0fd40314303afffee6d9203ff",
+      "bytes": 557431
     },
     {
       "path": "index.html",
-      "sha256": "c5d1ae387b73f545f718420f3a1eb678155a1ab45bc6c05395d74a18569faf72",
+      "sha256": "4b25e6ca937f377288865ea8c778af157d38abc41b8465455353b9d7dcebdb64",
       "bytes": 806
     }
   ]
