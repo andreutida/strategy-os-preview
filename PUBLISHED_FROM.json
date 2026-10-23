@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "codex/ux-f3-diagnosis-reading",
-    "commit": "e928e457105614335b40eb682366ea1c0473c369",
-    "commitDate": "2026-10-22T22:19:10+00:00",
-    "subject": "docs: revisão técnica final da UX-F3"
+    "commit": "86dc4506c65cf99e2fd95c741805a032520384f8",
+    "commitDate": "2026-10-23T11:55:07+00:00",
+    "subject": "docs: UX-F3 — regra definitiva do modo foco (rede completa)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/index-CaOceLSU.js",
-      "sha256": "eefb8a2953dba95eba1849c0713ce469dc6ad90f101eb66f05b8463b3bcff6bb",
-      "bytes": 533415
+      "path": "assets/index-BG1e1NAx.css",
+      "sha256": "f5c81c8c5e95414577f2334337f49368292e78e8ebea05dff1df57b381686470",
+      "bytes": 65122
     },
     {
-      "path": "assets/index-CnMgGjqg.css",
-      "sha256": "5eefd874c59b6eaf75d31794fa15466e637020a2b5039bea0ab9e584c304a4dc",
-      "bytes": 65045
+      "path": "assets/index-BWk5ReUO.js",
+      "sha256": "205383790bbe4b22f0221320e28d122dd5bb748de0d1a9d05cd4142cc95ad1c1",
+      "bytes": 534363
     },
     {
       "path": "index.html",
-      "sha256": "6ac6506912161aac16eb1cdc0b914c53fe8ce52d73828239ee9f723ac423caa7",
+      "sha256": "1f0a42ee6d3fa57a31293538312b61682cff0a6ff2d3d172bbad18e328e2ae08",
       "bytes": 806
     }
   ]
