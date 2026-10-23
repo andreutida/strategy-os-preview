@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/ux-f2c2-matrix-headers",
-    "commit": "4c680d90cfbd378770c0b07cd991923d1d8b01ad",
-    "commitDate": "2026-10-22T19:24:36+00:00",
-    "subject": "docs: UX-F2C.2 — correção do enquadramento da abrangência e resultados"
+    "branch": "codex/ux-f3-diagnosis-reading",
+    "commit": "e928e457105614335b40eb682366ea1c0473c369",
+    "commitDate": "2026-10-22T22:19:10+00:00",
+    "subject": "docs: revisão técnica final da UX-F3"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/index-AmfAu93p.js",
-      "sha256": "45a49a75e4f1f7695d0f6b1469071610f84528642a37f86257a3982789e99e3a",
-      "bytes": 529018
+      "path": "assets/index-CaOceLSU.js",
+      "sha256": "eefb8a2953dba95eba1849c0713ce469dc6ad90f101eb66f05b8463b3bcff6bb",
+      "bytes": 533415
     },
     {
-      "path": "assets/index-BueIS3Cw.css",
-      "sha256": "cd7846a694fe531661c6ddda79ef694de34e8ff6f0eb44ab93c051f1d1048999",
-      "bytes": 63232
+      "path": "assets/index-CnMgGjqg.css",
+      "sha256": "5eefd874c59b6eaf75d31794fa15466e637020a2b5039bea0ab9e584c304a4dc",
+      "bytes": 65045
     },
     {
       "path": "index.html",
-      "sha256": "2cafffca7506d71df6d7f2b46db2a7411ccfd88251e5f50055a824e2b05cc3b4",
+      "sha256": "6ac6506912161aac16eb1cdc0b914c53fe8ce52d73828239ee9f723ac423caa7",
       "bytes": 806
     }
   ]
