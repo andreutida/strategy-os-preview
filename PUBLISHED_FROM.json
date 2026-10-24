@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/ux-f5-finish-stability",
-    "commit": "2a38235551b003c5f8159985d40453ade4d7a87d",
-    "commitDate": "2026-10-23T18:17:49+00:00",
-    "subject": "feat(matrix): UX-F5 ajustes aprovados — menu Mais no cabeçalho compacto (alternativa B) e ajuda de Revelar/Localizar (alternativa D)"
+    "branch": "codex/mc-01-context-map-foundation",
+    "commit": "da7d5d16bfc3372e6c28967d741f5a1386b8bfa7",
+    "commitDate": "2026-10-24T03:00:49+00:00",
+    "subject": "fix(context-map): estabilidade espacial — reorganização derivada, sem deslocamento residual"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,28 @@
   },
   "files": [
     {
-      "path": "assets/index-BAvi2An4.css",
-      "sha256": "c136c0d9d91d159c928dcea4db282eef6caddbfda70f14a0de02924ca1a86d4d",
-      "bytes": 78394
+      "path": "assets/ContextMapApp-0GPEWr69.css",
+      "sha256": "751efbc512a28beddc6c0d907acdcdda352e8b1bbece470729d1c99bb05ee73c",
+      "bytes": 5721
     },
     {
-      "path": "assets/index-ma6mOtSu.js",
-      "sha256": "28aa81d54602182ff671febbcb2aeac5f7f2fdc0fd40314303afffee6d9203ff",
-      "bytes": 557431
+      "path": "assets/ContextMapApp-CIw8x0OE.js",
+      "sha256": "cc87887cd41ba575d4b0921169467670b62d8d6b7f7631a60a477020cc316328",
+      "bytes": 44025
+    },
+    {
+      "path": "assets/index-E341VBRZ.js",
+      "sha256": "a18520352bad496a17f44252b8c524e2a984d58bd1c9bce944a92e2865a82a64",
+      "bytes": 563099
+    },
+    {
+      "path": "assets/index-UFjiACo6.css",
+      "sha256": "2f9591e97bbdde95fdbec16cd5640e9965b6897456318ae95e057d1faedda0f8",
+      "bytes": 80325
     },
     {
       "path": "index.html",
-      "sha256": "4b25e6ca937f377288865ea8c778af157d38abc41b8465455353b9d7dcebdb64",
+      "sha256": "63a03f5ab59853a67a96b4bb64c0c770a61a48021687ba54ea7abf9b5f87e6ea",
       "bytes": 806
     }
   ]
