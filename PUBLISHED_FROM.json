@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "codex/mc-01-context-map-foundation",
-    "commit": "da7d5d16bfc3372e6c28967d741f5a1386b8bfa7",
-    "commitDate": "2026-10-24T03:00:49+00:00",
-    "subject": "fix(context-map): estabilidade espacial — reorganização derivada, sem deslocamento residual"
+    "commit": "5300d1ec742a37fab84898b7174292ea31d43b0d",
+    "commitDate": "2026-10-24T21:01:24+00:00",
+    "subject": "fix(context-map): elemento sobre o cartão de um grupo recolhido não fica sob o bloco que aparece ao expandir"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -20,13 +20,13 @@
       "bytes": 5721
     },
     {
-      "path": "assets/ContextMapApp-CIw8x0OE.js",
-      "sha256": "cc87887cd41ba575d4b0921169467670b62d8d6b7f7631a60a477020cc316328",
-      "bytes": 44025
+      "path": "assets/ContextMapApp-DycUbfMv.js",
+      "sha256": "e91c9343edb8ae656b6df12e09b7aafa80312b487937076b3885df63c3b0c87f",
+      "bytes": 48413
     },
     {
-      "path": "assets/index-E341VBRZ.js",
-      "sha256": "a18520352bad496a17f44252b8c524e2a984d58bd1c9bce944a92e2865a82a64",
+      "path": "assets/index-CDLIe1JV.js",
+      "sha256": "3ffd0ef6284cfc367cdab37c0aeca97e844a961fd31bf4de6694af4d9f2a0061",
       "bytes": 563099
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "63a03f5ab59853a67a96b4bb64c0c770a61a48021687ba54ea7abf9b5f87e6ea",
+      "sha256": "7128789ba41d64403b82264aed1f0a66818edff7394e3fb63aed75f8886cd570",
       "bytes": 806
     }
   ]
