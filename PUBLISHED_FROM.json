@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-02-1a-connections",
-    "commit": "7a79c520d05d2dac021d7229049d77850ad493d6",
-    "commitDate": "2026-10-30T14:29:07+00:00",
-    "subject": "feat(context-map): MC-02.1A — pontos de conexão, textos e pontas das setas, camada definitiva dos cabeçalhos"
+    "branch": "codex/mc-02-1b-group-connections",
+    "commit": "45a1e81566cbd33886ba619b8b617c3520976bf3",
+    "commitDate": "2026-10-30T17:43:34+00:00",
+    "subject": "docs: MC-02.1B — implementação, testes, medições, limitações e roteiro de homologação"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-B2gmJ8nx.js",
-      "sha256": "0fc8c2573f7037d97ef2427a85b326b47aad7108d5f9a3d7c8b23bf12fa8183d",
-      "bytes": 66269
+      "path": "assets/ContextMapApp-BXMp-Nuu.css",
+      "sha256": "6052c60460a35ab93d3be1021de0126b93ca8031f15ac2201c78e8b3b01b979f",
+      "bytes": 9557
     },
     {
-      "path": "assets/ContextMapApp-D-KUtfwD.css",
-      "sha256": "1d0609ccfd3e926d4b8a5ba03a31e394546c3dbda20b9a577bfd5d1ce878c4dd",
-      "bytes": 8579
+      "path": "assets/ContextMapApp-Q121fOXj.js",
+      "sha256": "f039fd54737d41ea728e5b7fa6bafb2e4dd21bd88a8aec1fe7eed5c99380e6c8",
+      "bytes": 70539
     },
     {
-      "path": "assets/index-BXBZkaMP.js",
-      "sha256": "68647dd6654ca3998d1074e3a2a7deb78e8eaccc9535d7797cb60e79af1f24cc",
+      "path": "assets/index-DRRjIoNb.js",
+      "sha256": "269352711c6468588d694017b3001c63c16aed4b327ca1edbad6415fc147832e",
       "bytes": 563256
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "f472eeeef432b398ee7eeb9001822b26ea07dd714167c301fa8781c316cdef1a",
+      "sha256": "713e7d7a49df46deaf29f77a9a07504b6df5aaed866cb8b0ac2724043589a66d",
       "bytes": 806
     }
   ]
