@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-02-1b-group-connections",
-    "commit": "45a1e81566cbd33886ba619b8b617c3520976bf3",
-    "commitDate": "2026-10-30T17:43:34+00:00",
-    "subject": "docs: MC-02.1B — implementação, testes, medições, limitações e roteiro de homologação"
+    "branch": "codex/mc-02-2-group-organization",
+    "commit": "1094443be0df3cc582204953398d9c5e50b7b09c",
+    "commitDate": "2026-10-30T19:31:57+00:00",
+    "subject": "feat(context-map): MC-02.2 Fatia 0 — desfazer e refazer"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
+      "path": "assets/ContextMapApp-B9trTkJE.js",
+      "sha256": "effa87210de4e57f590d310a1de00cfa3b68a1e451c2c5a778168262a3cffcef",
+      "bytes": 74374
+    },
+    {
       "path": "assets/ContextMapApp-BXMp-Nuu.css",
       "sha256": "6052c60460a35ab93d3be1021de0126b93ca8031f15ac2201c78e8b3b01b979f",
       "bytes": 9557
     },
     {
-      "path": "assets/ContextMapApp-Q121fOXj.js",
-      "sha256": "f039fd54737d41ea728e5b7fa6bafb2e4dd21bd88a8aec1fe7eed5c99380e6c8",
-      "bytes": 70539
-    },
-    {
-      "path": "assets/index-DRRjIoNb.js",
-      "sha256": "269352711c6468588d694017b3001c63c16aed4b327ca1edbad6415fc147832e",
+      "path": "assets/index-Cni8yzUm.js",
+      "sha256": "106ff917437d644e7ce3f3de6ad949e99ca1635f9b9cf2e37fa7676abbd5d496",
       "bytes": 563256
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "713e7d7a49df46deaf29f77a9a07504b6df5aaed866cb8b0ac2724043589a66d",
+      "sha256": "fe30ab3c25b3b5a6d507200311e4ad93fb4bb214befa24aaea365da2bb48fff8",
       "bytes": 806
     }
   ]
