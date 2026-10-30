@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "codex/mc-01-context-map-foundation",
-    "commit": "5300d1ec742a37fab84898b7174292ea31d43b0d",
-    "commitDate": "2026-10-24T21:01:24+00:00",
-    "subject": "fix(context-map): elemento sobre o cartão de um grupo recolhido não fica sob o bloco que aparece ao expandir"
+    "commit": "d01b8f535a6350dd116c40f2cf485bc6c2acc993",
+    "commitDate": "2026-10-25T14:16:50+00:00",
+    "subject": "fix(context-map): nós do React Flow levam o tamanho e deixam de ficar ocultos (blocos que somem no Safari)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -20,13 +20,13 @@
       "bytes": 5721
     },
     {
-      "path": "assets/ContextMapApp-DycUbfMv.js",
-      "sha256": "e91c9343edb8ae656b6df12e09b7aafa80312b487937076b3885df63c3b0c87f",
-      "bytes": 48413
+      "path": "assets/ContextMapApp-D7zqv_Hz.js",
+      "sha256": "61e184d1b5d31014a5cba867397e56602eece124148ef1f02142bfbfddcc231a",
+      "bytes": 48454
     },
     {
-      "path": "assets/index-CDLIe1JV.js",
-      "sha256": "3ffd0ef6284cfc367cdab37c0aeca97e844a961fd31bf4de6694af4d9f2a0061",
+      "path": "assets/index-BzhDg1JK.js",
+      "sha256": "e8d671a96c28398d7053a37a1759d92cc39107f5f71829ec388f9fce116c342f",
       "bytes": 563099
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "7128789ba41d64403b82264aed1f0a66818edff7394e3fb63aed75f8886cd570",
+      "sha256": "78f0304f35f994ee27554eb3ce4248f0b2d5639d96040e17b9ee31bf45c8a16c",
       "bytes": 806
     }
   ]
