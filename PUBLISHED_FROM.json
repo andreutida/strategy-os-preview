@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-01-context-map-foundation",
-    "commit": "6538d2da9fb5303fa7f745a429addde65a12a17f",
-    "commitDate": "2026-10-30T11:43:50+00:00",
-    "subject": "fix(context-map): o botão de recolher do grupo não é interceptado por uma seta que passa sobre ele"
+    "branch": "codex/mc-02-1a-connections",
+    "commit": "7a79c520d05d2dac021d7229049d77850ad493d6",
+    "commitDate": "2026-10-30T14:29:07+00:00",
+    "subject": "feat(context-map): MC-02.1A — pontos de conexão, textos e pontas das setas, camada definitiva dos cabeçalhos"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,19 +15,19 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-DXg87oZO.js",
-      "sha256": "d061bc9adb8c7a96d6d6b81681eef7beda90d94e642153689dd3d0bb7fa16ffc",
-      "bytes": 49270
+      "path": "assets/ContextMapApp-B2gmJ8nx.js",
+      "sha256": "0fc8c2573f7037d97ef2427a85b326b47aad7108d5f9a3d7c8b23bf12fa8183d",
+      "bytes": 66269
     },
     {
-      "path": "assets/ContextMapApp-DaXWegqH.css",
-      "sha256": "2215c8ddf68d502bd08e3b0195e7815c223285fd261df4f2db96700adb4c0e45",
-      "bytes": 6011
+      "path": "assets/ContextMapApp-D-KUtfwD.css",
+      "sha256": "1d0609ccfd3e926d4b8a5ba03a31e394546c3dbda20b9a577bfd5d1ce878c4dd",
+      "bytes": 8579
     },
     {
-      "path": "assets/index-GTyuym85.js",
-      "sha256": "d9974d6454ab3b4289f7544e7d387c2ef859f65e980366dbdd30132824b9f0ee",
-      "bytes": 563099
+      "path": "assets/index-BXBZkaMP.js",
+      "sha256": "68647dd6654ca3998d1074e3a2a7deb78e8eaccc9535d7797cb60e79af1f24cc",
+      "bytes": 563256
     },
     {
       "path": "assets/index-UFjiACo6.css",
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "e44d76de38248d7fc54b49ed6fc99680db1cea13aa23c5b56c1e77d6abb531f5",
+      "sha256": "f472eeeef432b398ee7eeb9001822b26ea07dd714167c301fa8781c316cdef1a",
       "bytes": 806
     }
   ]
