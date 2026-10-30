@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "codex/mc-01-context-map-foundation",
-    "commit": "d01b8f535a6350dd116c40f2cf485bc6c2acc993",
-    "commitDate": "2026-10-25T14:16:50+00:00",
-    "subject": "fix(context-map): nós do React Flow levam o tamanho e deixam de ficar ocultos (blocos que somem no Safari)"
+    "commit": "6538d2da9fb5303fa7f745a429addde65a12a17f",
+    "commitDate": "2026-10-30T11:43:50+00:00",
+    "subject": "fix(context-map): o botão de recolher do grupo não é interceptado por uma seta que passa sobre ele"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-0GPEWr69.css",
-      "sha256": "751efbc512a28beddc6c0d907acdcdda352e8b1bbece470729d1c99bb05ee73c",
-      "bytes": 5721
+      "path": "assets/ContextMapApp-DXg87oZO.js",
+      "sha256": "d061bc9adb8c7a96d6d6b81681eef7beda90d94e642153689dd3d0bb7fa16ffc",
+      "bytes": 49270
     },
     {
-      "path": "assets/ContextMapApp-D7zqv_Hz.js",
-      "sha256": "61e184d1b5d31014a5cba867397e56602eece124148ef1f02142bfbfddcc231a",
-      "bytes": 48454
+      "path": "assets/ContextMapApp-DaXWegqH.css",
+      "sha256": "2215c8ddf68d502bd08e3b0195e7815c223285fd261df4f2db96700adb4c0e45",
+      "bytes": 6011
     },
     {
-      "path": "assets/index-BzhDg1JK.js",
-      "sha256": "e8d671a96c28398d7053a37a1759d92cc39107f5f71829ec388f9fce116c342f",
+      "path": "assets/index-GTyuym85.js",
+      "sha256": "d9974d6454ab3b4289f7544e7d387c2ef859f65e980366dbdd30132824b9f0ee",
       "bytes": 563099
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "78f0304f35f994ee27554eb3ce4248f0b2d5639d96040e17b9ee31bf45c8a16c",
+      "sha256": "e44d76de38248d7fc54b49ed6fc99680db1cea13aa23c5b56c1e77d6abb531f5",
       "bytes": 806
     }
   ]
