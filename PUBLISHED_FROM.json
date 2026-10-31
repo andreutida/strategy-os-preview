@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-02-2-multi-selection",
-    "commit": "feef9a4828b91a0af8b42c05fa306306059c72b6",
-    "commitDate": "2026-10-31T19:09:52+00:00",
-    "subject": "fix(context-map): MC-02.2 Fatia 1 — correções da revisão técnica independente (M1, M2, M3, B1–B4)"
+    "branch": "codex/mc-02-2-group-ungroup",
+    "commit": "85dd2ee58872339649356ff281a4cddaad2dafea",
+    "commitDate": "2026-10-31T23:08:01+00:00",
+    "subject": "docs: MC-02.2 Fatia 2 — implementação, testes, riscos e roteiro de homologação; rótulo da prévia sem truncar"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-BLhbtu2_.js",
-      "sha256": "73ec97a9f79cbf523e98ba8b96412674f2b4f6b963ff57c08ddb0d57368731ec",
-      "bytes": 82108
+      "path": "assets/ContextMapApp-Dx7svz4R.js",
+      "sha256": "f666b8eb9c3feb84e52ea8a4cf3b314c6fcc0c6e013d47910c260ad4bbfb2a70",
+      "bytes": 99489
     },
     {
-      "path": "assets/ContextMapApp-Dv3l1OCs.css",
-      "sha256": "f508ec4705a3a3c99857f23f361a409338957c4a2c1b42d7c4f96735327e4349",
-      "bytes": 10309
+      "path": "assets/ContextMapApp-EqgT543M.css",
+      "sha256": "96696047d00d78d2d161508093e8cde7b8076c95c20497fbac5a92921ec62ce6",
+      "bytes": 11400
     },
     {
-      "path": "assets/index-BH0QdTl9.js",
-      "sha256": "38a19d6228ed9d15026838e9c191c10d12648dbc25c2396eb651cecd602c6421",
+      "path": "assets/index-CUmpwXDy.js",
+      "sha256": "da1911b19f1e7dfe985850778b3b7bd1453970d486ae13a78389412a4dbf8b2c",
       "bytes": 563264
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "163a36b2d85809d7675d9f71d85f7d06ffc293054522d67c917d06603ee70592",
+      "sha256": "eda453e55f10689919821f56bf1d28b158c29992db4aab7e255b8f0d7497e582",
       "bytes": 806
     }
   ]
