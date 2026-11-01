@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-02-2-duplicate-groups",
-    "commit": "2b0da4ad8ab2aca34ffb858a025a1174e4ee10fc",
-    "commitDate": "2026-11-01T12:19:26+00:00",
-    "subject": "MC-02.2 Fatia 4 — F4.7 documentação (FATIA-4-DUPLICAR), estado do plano, MAPA_DE_CONTEXTO §18 e PROJECT_CONTEXT"
+    "branch": "codex/mc-02-3-resize",
+    "commit": "ce271f830bc75c4f6f3ec2412799f74993ff8d38",
+    "commitDate": "2026-11-01T16:08:51+00:00",
+    "subject": "MC-02.3/F1: soltar a alça grava exatamente a última prévia apresentada"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-BfZMXEGd.css",
-      "sha256": "9b69903e14bd2c3d896d4862a69cbcd3b4b59be9b91ba5961f42effb3803669b",
-      "bytes": 14073
+      "path": "assets/ContextMapApp-C00PwC8e.js",
+      "sha256": "e06f43882bab2c7eda56d59cd2aa389d44b50576669e1f763c0131b0cb4d48ed",
+      "bytes": 152393
     },
     {
-      "path": "assets/ContextMapApp-DEqsDShI.js",
-      "sha256": "f1a278d8d231029f8d6bc1b9afe218909523f77994086d33786b351319c448e3",
-      "bytes": 129776
+      "path": "assets/ContextMapApp-Cdk75RQd.css",
+      "sha256": "0a3c5fb08aa05d8c76bb0805d0e0961167c840e535574a7aab9588d8c3d7d359",
+      "bytes": 16764
     },
     {
-      "path": "assets/index-BVtY1Sns.js",
-      "sha256": "eecd16190d68f025aeff46d2026c109d5e5a5c10ad16a3bfc3827caf1a857d1d",
+      "path": "assets/index-BnlbRJd1.js",
+      "sha256": "157eff51311ad7f61e2a88e07df948f6704d2deec2616c44a942091a07eda4c4",
       "bytes": 563264
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "347a536a9758446da769453571257546701b87bdde869107a3f0de6df4bafd5c",
+      "sha256": "36383bcf257b176403992e8f392ba4ec37534d50fd29651f3287f406ccefac95",
       "bytes": 806
     }
   ]
