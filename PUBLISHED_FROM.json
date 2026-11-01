@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-02-2-group-ungroup",
-    "commit": "85dd2ee58872339649356ff281a4cddaad2dafea",
-    "commitDate": "2026-10-31T23:08:01+00:00",
-    "subject": "docs: MC-02.2 Fatia 2 — implementação, testes, riscos e roteiro de homologação; rótulo da prévia sem truncar"
+    "branch": "codex/mc-02-2-transfer-groups",
+    "commit": "c0e415124192c6146e8704e40de07f283f71f7f7",
+    "commitDate": "2026-11-01T04:22:02+00:00",
+    "subject": "docs: MC-02.2 Fatia 3 — implementação, testes, riscos e roteiro de homologação"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-Dx7svz4R.js",
-      "sha256": "f666b8eb9c3feb84e52ea8a4cf3b314c6fcc0c6e013d47910c260ad4bbfb2a70",
-      "bytes": 99489
+      "path": "assets/ContextMapApp-_I3oTDI2.css",
+      "sha256": "80b28ae1a844315dfcd15a5d783ef64ee328b2174a179eb8df39b64f722ea221",
+      "bytes": 13896
     },
     {
-      "path": "assets/ContextMapApp-EqgT543M.css",
-      "sha256": "96696047d00d78d2d161508093e8cde7b8076c95c20497fbac5a92921ec62ce6",
-      "bytes": 11400
+      "path": "assets/ContextMapApp-a1Aubcb2.js",
+      "sha256": "a38bf440377f669cc4dd464c0ac68b1d7f47a551041f002f7420c6af098ec929",
+      "bytes": 118241
     },
     {
-      "path": "assets/index-CUmpwXDy.js",
-      "sha256": "da1911b19f1e7dfe985850778b3b7bd1453970d486ae13a78389412a4dbf8b2c",
+      "path": "assets/index-DADyxb-1.js",
+      "sha256": "d647d23c4fbca6c240c8675affd65d57d270ae2403e0739bc473a18f0cf0f2cc",
       "bytes": 563264
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "eda453e55f10689919821f56bf1d28b158c29992db4aab7e255b8f0d7497e582",
+      "sha256": "d84fc66f639159d5f77f9dc795d158ecaafb93147181b4f60424d939839c1dbb",
       "bytes": 806
     }
   ]
