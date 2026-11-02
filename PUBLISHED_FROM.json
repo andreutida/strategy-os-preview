@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-02-3-resize",
-    "commit": "ce271f830bc75c4f6f3ec2412799f74993ff8d38",
-    "commitDate": "2026-11-01T16:08:51+00:00",
-    "subject": "MC-02.3/F1: soltar a alça grava exatamente a última prévia apresentada"
+    "branch": "codex/mc-02-3-organizar-plano",
+    "commit": "3ea7207b097f3eb6472f632c0392257894dd7410",
+    "commitDate": "2026-11-01T19:34:20+00:00",
+    "subject": "docs(MC-02.3/F2): O5 — implementação, evidências, desempenho, limitações e roteiro de homologação"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-C00PwC8e.js",
-      "sha256": "e06f43882bab2c7eda56d59cd2aa389d44b50576669e1f763c0131b0cb4d48ed",
-      "bytes": 152393
+      "path": "assets/ContextMapApp-BxzCHllF.js",
+      "sha256": "5dac1b3cb57f5aa6cb170fbce423381fb9d40fe4f7cd0aa5b54a8c288a02d695",
+      "bytes": 168811
     },
     {
-      "path": "assets/ContextMapApp-Cdk75RQd.css",
-      "sha256": "0a3c5fb08aa05d8c76bb0805d0e0961167c840e535574a7aab9588d8c3d7d359",
-      "bytes": 16764
+      "path": "assets/ContextMapApp-CwF7WL6a.css",
+      "sha256": "3063f594db213b2e0079ce4485cd1aed22678cc7f2f5b3a749f116cc0205135f",
+      "bytes": 18008
     },
     {
-      "path": "assets/index-BnlbRJd1.js",
-      "sha256": "157eff51311ad7f61e2a88e07df948f6704d2deec2616c44a942091a07eda4c4",
+      "path": "assets/index-13Gd9Ex6.js",
+      "sha256": "36a8caee578575ccb5fef0af8c5878f0444ca8ceb9939db588c4c1d5927bc63c",
       "bytes": 563264
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "36383bcf257b176403992e8f392ba4ec37534d50fd29651f3287f406ccefac95",
+      "sha256": "ba0417bb6a686fb79d0c84224ce634fbcc4d8712dfc752f2eab463fc056fecd9",
       "bytes": 806
     }
   ]
