@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-02-3-organizar-plano",
-    "commit": "3ea7207b097f3eb6472f632c0392257894dd7410",
-    "commitDate": "2026-11-01T19:34:20+00:00",
-    "subject": "docs(MC-02.3/F2): O5 — implementação, evidências, desempenho, limitações e roteiro de homologação"
+    "branch": "codex/mc-03-plano",
+    "commit": "1488dfe43fa34a6eaeee97371ddf55c38d1c60b5",
+    "commitDate": "2026-11-02T16:35:09+00:00",
+    "subject": "docs(MC-03): registro de S0 e S1 (caracterização e painel somente leitura), evidências, limitações e roteiro de homologação"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-BxzCHllF.js",
-      "sha256": "5dac1b3cb57f5aa6cb170fbce423381fb9d40fe4f7cd0aa5b54a8c288a02d695",
-      "bytes": 168811
+      "path": "assets/ContextMapApp-C2VNx4eL.css",
+      "sha256": "6ceabf07bfe0cb10c84356dc0cf4814d52bea68cebf4321841c055634b56bece",
+      "bytes": 19563
     },
     {
-      "path": "assets/ContextMapApp-CwF7WL6a.css",
-      "sha256": "3063f594db213b2e0079ce4485cd1aed22678cc7f2f5b3a749f116cc0205135f",
-      "bytes": 18008
+      "path": "assets/ContextMapApp-CbdMIBuv.js",
+      "sha256": "eaff054fb3dc947eaa00528cde28d2d553774b2a13521e8a241aeb66f5ebc8d1",
+      "bytes": 177201
     },
     {
-      "path": "assets/index-13Gd9Ex6.js",
-      "sha256": "36a8caee578575ccb5fef0af8c5878f0444ca8ceb9939db588c4c1d5927bc63c",
+      "path": "assets/index-DO09jD0l.js",
+      "sha256": "b30dc872554f4e5af9083da362b32e7e497de76811b85938103a76e8b590946f",
       "bytes": 563264
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "ba0417bb6a686fb79d0c84224ce634fbcc4d8712dfc752f2eab463fc056fecd9",
+      "sha256": "2af492629576fe67431faeee07720c331f186cad572407471de7d98365cbd103",
       "bytes": 806
     }
   ]
