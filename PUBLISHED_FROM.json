@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-03-s2-plano",
-    "commit": "371bdb7b0b9bcf174630379c620df3fab60776d2",
-    "commitDate": "2026-11-02T21:23:53+00:00",
-    "subject": "feat(MC-03/S2): edição do nome e do texto da conexão pelo painel — E2E, documentação e build"
+    "branch": "codex/mc-03-s3-plano",
+    "commit": "1cc1124412fbda1f5d20985914266b188d71d8f1",
+    "commitDate": "2026-11-03T16:14:20+00:00",
+    "subject": "docs(MC-03/S3): decisões aprovadas, Q16 provisória, registro da implementação e estado"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-B21c345Q.css",
-      "sha256": "668cf20f12c400a1e480710b14056d611fcecb30e37f5f914bd62858e0f4c19a",
-      "bytes": 20972
+      "path": "assets/ContextMapApp-BGrbh20_.css",
+      "sha256": "f0406e14da2966ec304f9603d03082c04cd979f3b3b34bca81b29a16d174a858",
+      "bytes": 21786
     },
     {
-      "path": "assets/ContextMapApp-CuU3ZJpr.js",
-      "sha256": "768c503a78937ba0291888c793d7e0b7d3722cc8d4f1077c57c47d0c00ebcffd",
-      "bytes": 185092
+      "path": "assets/ContextMapApp-DIav9Gbt.js",
+      "sha256": "7a9ddb8b1551d31f8f5863348750e6da1e3e7ad81cfad8b680b572de40cabf95",
+      "bytes": 192478
     },
     {
-      "path": "assets/index-CVhy9lz-.js",
-      "sha256": "74bae1f9d027b05bcdf56819501300306c1f6044c301de48793917aaee71f5c9",
+      "path": "assets/index-BsLEwD1e.js",
+      "sha256": "372fa6a2e71e8b2a1dc9bbbc105210bc0e1693c57facf50062d0171ea6ee03f7",
       "bytes": 563264
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "fb0bfedb19c7dc161506f5c4a29d793e612c5cbc251bef0a4539838ed3f31e93",
+      "sha256": "cde4a1d13c72c1d3842f7d29e9f54522158e3e34bc11be5d1d1cb2d05c8cf26e",
       "bytes": 806
     }
   ]
