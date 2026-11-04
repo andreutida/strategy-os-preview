@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-03-s4-plano",
-    "commit": "6c79bb29b2bb0afc20cd8ffbbea72b59e7e050cf",
-    "commitDate": "2026-11-04T00:24:22+00:00",
-    "subject": "docs(MC-03/S4): correção pré-publicação do null existente e da cópia do procedimento"
+    "branch": "codex/mc-03-dq-01-correcao",
+    "commit": "511ba561f84846e88e285c75c2eaadaa19a58a1c",
+    "commitDate": "2026-11-04T11:00:58+00:00",
+    "subject": "docs(MC-03-DQ-01): registro da correção isolada (defeito, evidência antes/depois, testes, mutação e limitações)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
+      "path": "assets/ContextMapApp-CPEn6IM0.js",
+      "sha256": "279368119511ad436fb68b13ce656aa6f25f45f33018a15743f655707dcdfba8",
+      "bytes": 206707
+    },
+    {
       "path": "assets/ContextMapApp-DYvcFuK-.css",
       "sha256": "1f7e6fe51ff86234ad3527e58bac0d70638d45b2c52c5e9909aaa3409127e0ad",
       "bytes": 22684
     },
     {
-      "path": "assets/ContextMapApp-ZgMCnMC_.js",
-      "sha256": "dd9c07ff07ac62eabc13057acf96c3b42bb496daffd920b92d518fa05770d183",
-      "bytes": 206701
-    },
-    {
-      "path": "assets/index-ChO0oZyO.js",
-      "sha256": "c41943d20d9288aa8f108df45f946d679de33b5670544bce4b7eb02c70be5032",
+      "path": "assets/index-BuoZOE2w.js",
+      "sha256": "c5994260f96f6c705e82462847669f1989d1ee550716aa02e80fedcc4fa79ae0",
       "bytes": 563264
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "103c933ebfe641a0bc24410357e9bec427254736175d52851115cf0456619a9b",
+      "sha256": "ed4112ea3d3ff48786d4c2977d7689f17a35ff42e1338617161f989fc9369bb5",
       "bytes": 806
     }
   ]
