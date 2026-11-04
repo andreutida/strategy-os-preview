@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-03-dq-01-correcao",
-    "commit": "511ba561f84846e88e285c75c2eaadaa19a58a1c",
-    "commitDate": "2026-11-04T11:00:58+00:00",
-    "subject": "docs(MC-03-DQ-01): registro da correção isolada (defeito, evidência antes/depois, testes, mutação e limitações)"
+    "branch": "codex/mc-03-s5-navegacao",
+    "commit": "ab128759aa282180a1e3e158503a2417bba30ec4",
+    "commitDate": "2026-11-04T18:09:35+00:00",
+    "subject": "build(MC-03/S5): reconstrói editor/ com a correção do cabeçalho do painel"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-CPEn6IM0.js",
-      "sha256": "279368119511ad436fb68b13ce656aa6f25f45f33018a15743f655707dcdfba8",
-      "bytes": 206707
+      "path": "assets/ContextMapApp-3nRuuY5n.css",
+      "sha256": "1cfa20f98c8a0978f273a76832a76906c93757e4c4eb17a6e463b13e5e47985b",
+      "bytes": 25348
     },
     {
-      "path": "assets/ContextMapApp-DYvcFuK-.css",
-      "sha256": "1f7e6fe51ff86234ad3527e58bac0d70638d45b2c52c5e9909aaa3409127e0ad",
-      "bytes": 22684
+      "path": "assets/ContextMapApp-BLHPkOeT.js",
+      "sha256": "5b78f7690ec5640973b208cd71a56e2d59809e9407f89e9f26235a1927a349d5",
+      "bytes": 214284
     },
     {
-      "path": "assets/index-BuoZOE2w.js",
-      "sha256": "c5994260f96f6c705e82462847669f1989d1ee550716aa02e80fedcc4fa79ae0",
+      "path": "assets/index-BaoLJ9N5.js",
+      "sha256": "f07dd2ef4445a8345d836ba937a385e3059d296e50f0414b99e0017ce8acddae",
       "bytes": 563264
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "ed4112ea3d3ff48786d4c2977d7689f17a35ff42e1338617161f989fc9369bb5",
+      "sha256": "6132209c8d391854b2cc859ff5c75e5f8fdf5678b15c13180d3ff6c7e6126c57",
       "bytes": 806
     }
   ]
