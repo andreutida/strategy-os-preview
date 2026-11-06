@@ -3,10 +3,10 @@
   "application": "Strategy OS",
   "source": {
     "repository": "andreutida/strategy-os-",
-    "branch": "codex/mc-03-s5-navegacao",
-    "commit": "ab128759aa282180a1e3e158503a2417bba30ec4",
-    "commitDate": "2026-11-04T18:09:35+00:00",
-    "subject": "build(MC-03/S5): reconstrói editor/ com a correção do cabeçalho do painel"
+    "branch": "main",
+    "commit": "ad13894697691baa2f17901a024d477e11ae9bef",
+    "commitDate": "2026-11-06T11:46:34-03:00",
+    "subject": "Merge PR #60: MC-03 / S5 simplificada (homologada no desktop, 4/4)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,18 +15,18 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-3nRuuY5n.css",
-      "sha256": "1cfa20f98c8a0978f273a76832a76906c93757e4c4eb17a6e463b13e5e47985b",
-      "bytes": 25348
+      "path": "assets/ContextMapApp-CNwYFzsv.css",
+      "sha256": "b5901fa56d2adf6a2891258cbf8b7ab6efffa7055a24dc1d026d281d094d95c0",
+      "bytes": 23618
     },
     {
-      "path": "assets/ContextMapApp-BLHPkOeT.js",
-      "sha256": "5b78f7690ec5640973b208cd71a56e2d59809e9407f89e9f26235a1927a349d5",
-      "bytes": 214284
+      "path": "assets/ContextMapApp-JDLFKXN7.js",
+      "sha256": "d7ad1d264093ff1d2fd959be5a7bf5ec1f6646c2ee9d56dae8a7a0caffb054f5",
+      "bytes": 211047
     },
     {
-      "path": "assets/index-BaoLJ9N5.js",
-      "sha256": "f07dd2ef4445a8345d836ba937a385e3059d296e50f0414b99e0017ce8acddae",
+      "path": "assets/index-C2Oon24a.js",
+      "sha256": "887db1fd6968306ffe51afdb79f4781ac60ef4fc61471e0118c2022831fb9dfc",
       "bytes": 563264
     },
     {
@@ -36,7 +36,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "6132209c8d391854b2cc859ff5c75e5f8fdf5678b15c13180d3ff6c7e6126c57",
+      "sha256": "72983f0e3a5855f51504fde37c19e48f3f4d691db6b803e808faea452ed591de",
       "bytes": 806
     }
   ]
