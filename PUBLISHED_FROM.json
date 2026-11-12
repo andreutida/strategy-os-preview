@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "main",
-    "commit": "ad13894697691baa2f17901a024d477e11ae9bef",
-    "commitDate": "2026-11-06T11:46:34-03:00",
-    "subject": "Merge PR #60: MC-03 / S5 simplificada (homologada no desktop, 4/4)"
+    "commit": "469e68b453a6b3750f53303c520a6796da69fa3a",
+    "commitDate": "2026-11-11T21:57:54-03:00",
+    "subject": "M01 lançamento: suítes de interface também contra o editor/ publicado (Validador sobre 9734bea)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -20,23 +20,38 @@
       "bytes": 23618
     },
     {
-      "path": "assets/ContextMapApp-JDLFKXN7.js",
-      "sha256": "d7ad1d264093ff1d2fd959be5a7bf5ec1f6646c2ee9d56dae8a7a0caffb054f5",
-      "bytes": 211047
+      "path": "assets/ContextMapApp-TPR9Urt7.js",
+      "sha256": "51d64221254b7ccb307896a822810dea932a4e3b84b34333736bd3f98fe34ed4",
+      "bytes": 211046
     },
     {
-      "path": "assets/index-C2Oon24a.js",
-      "sha256": "887db1fd6968306ffe51afdb79f4781ac60ef4fc61471e0118c2022831fb9dfc",
-      "bytes": 563264
+      "path": "assets/PlanMapApp-8GpSXlA4.css",
+      "sha256": "41e99316285829dc4a1a39129349158fe66537b9a44b48c6a61de6de898a4d4e",
+      "bytes": 23756
     },
     {
-      "path": "assets/index-UFjiACo6.css",
-      "sha256": "2f9591e97bbdde95fdbec16cd5640e9965b6897456318ae95e057d1faedda0f8",
-      "bytes": 80325
+      "path": "assets/PlanMapApp-CjCB25-N.js",
+      "sha256": "3eb7e792603348da7f7b13cb852ee4d564ce67f0a358fb8bf8b7c60073387d8a",
+      "bytes": 123915
+    },
+    {
+      "path": "assets/idbBackend-Brm7TLwV.js",
+      "sha256": "91a93bd3adec0aeb4b1f2734a54fc4e9aab08ff93a553ff2f02544b8d98373e7",
+      "bytes": 23835
+    },
+    {
+      "path": "assets/index-8fPyHAbw.js",
+      "sha256": "ce2ddb668c1effc1f994a6b7fd88131f43060114fa284e693c7a40e7581ffe4a",
+      "bytes": 564037
+    },
+    {
+      "path": "assets/index-BhduKWMA.css",
+      "sha256": "3bfa3bc1f6cebc9cd3a45644712392f0babb109fdaab6f9f086d742df5bcd10e",
+      "bytes": 80328
     },
     {
       "path": "index.html",
-      "sha256": "72983f0e3a5855f51504fde37c19e48f3f4d691db6b803e808faea452ed591de",
+      "sha256": "a4ff844de0c6e17aab4e70223bd8f9f8f3a40fc852f644c766ad3bbb7922fe86",
       "bytes": 806
     }
   ]
