@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "main",
-    "commit": "5196acb38a0bf7e3db194570f4d6e56a545f80c5",
-    "commitDate": "2026-11-14T13:20:43-03:00",
-    "subject": "M03 Contexto: cópia de segurança — só deste mapa e só os três campos (Codex P1/P2 em f80c903)"
+    "commit": "eea27ed703a60dfaf7bff333b22d46fa973ef80a",
+    "commitDate": "2026-11-14T16:37:02-03:00",
+    "subject": "M03 PR B: o Escape que fecha o menu do Mercado não fecha também o painel (Codex P2 em 50a3c6c)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,44 +15,44 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-BSWeaBZc.css",
-      "sha256": "b3f8d37f6dc8ae16c807d174fcc4135b5825370b32e91698ee5ea644f019cdfc",
-      "bytes": 21834
+      "path": "assets/ContextMapApp-BE47LFGv.css",
+      "sha256": "96322066f03a57b2b7b6fd988a82b2a1bb3b23f1dc712a7053f1c43618c8ef52",
+      "bytes": 21791
     },
     {
-      "path": "assets/ContextMapApp-Bflx0s5J.js",
-      "sha256": "914a105a64b9ae447a987308b09a3386728c2461a3d2f69597852ce029ec81a4",
-      "bytes": 176646
+      "path": "assets/ContextMapApp-BlAY_9dv.js",
+      "sha256": "4e84dcc2d6a5196fffa7d279380423ba71260b3c2854229fc8ea8f3dd04c2468",
+      "bytes": 177419
     },
     {
-      "path": "assets/MarketMapApp-CTyzm7Ar.js",
-      "sha256": "1f504bc3ee55c87f11b9be03d40151b58d2a8a2190a7f41941275099234a5e4c",
+      "path": "assets/MarketMapApp-CmfOop63.js",
+      "sha256": "40fddd6b2842c9f4f27f9c4379a950128c5e5f3fc2f373fbebfe862304e71da9",
       "bytes": 228
     },
     {
-      "path": "assets/PlanMapApp-CUqhHhCO.js",
-      "sha256": "3f7f4353cbc8df0786a5ef511e692db494f5bf27f71ebe6881d4b3a23f744845",
-      "bytes": 162494
+      "path": "assets/PlanMapApp-C83mEGTn.css",
+      "sha256": "a4014120f2e7efdcc5234c071261c44c10b3a5c95928f56828287975284a9309",
+      "bytes": 36898
     },
     {
-      "path": "assets/PlanMapApp-CmFEBuZv.css",
-      "sha256": "b7ae1c9d42541cfc8ed628330745a0590287ba51c958d295f8e83fbb67776e98",
-      "bytes": 36246
+      "path": "assets/PlanMapApp-CXRcrozl.js",
+      "sha256": "b48dea454c27dcf09d844931909d5b310bedf4301047bbc79072046e9b22acae",
+      "bytes": 163699
     },
     {
-      "path": "assets/idbBackend-Hg6o0meW.js",
-      "sha256": "8b8dbedc1d50858821c4a34be0679d58343b43733b4cd6753833af65ab9852aa",
+      "path": "assets/idbBackend-D-TmsaSV.js",
+      "sha256": "a3ba37eac68415dba71dbc2d2d229195dc42a4d2a3cf327bbe1829f8e85e25f8",
       "bytes": 24127
     },
     {
-      "path": "assets/index-BhduKWMA.css",
-      "sha256": "3bfa3bc1f6cebc9cd3a45644712392f0babb109fdaab6f9f086d742df5bcd10e",
-      "bytes": 80328
+      "path": "assets/index-CQjt2eSH.js",
+      "sha256": "9659ebd9b98a86348e22df49584fad1e0535fd13161b78b1978b12cbeff9c885",
+      "bytes": 563332
     },
     {
-      "path": "assets/index-DV1koAI0.js",
-      "sha256": "6a0832158935b027294439a77aeb1443735d475c7adcef534709bb3b7af5fb2b",
-      "bytes": 556397
+      "path": "assets/index-DO313HAj.css",
+      "sha256": "4b95f68667131b87d2a998bbba4aa901e40f6f1afdf3274ca452089a5edb64be",
+      "bytes": 83865
     },
     {
       "path": "assets/marketPanel-B2IYkVH8.js",
@@ -66,7 +66,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "97979af05f76579de16dc6d13e03b7fea58005fd2e7cbd75792f18a5f02ef574",
+      "sha256": "e7d10e53ab2365841a0ef239410a0a19cf6bd1c8f82f8ed301105040933a90f0",
       "bytes": 883
     }
   ]

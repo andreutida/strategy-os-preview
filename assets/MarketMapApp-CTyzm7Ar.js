@@ -1,1 +1,0 @@
-import{E as e}from"./index-DV1koAI0.js";import{o as t,t as n}from"./PlanMapApp-CUqhHhCO.js";var r=e();function i({moduleSwitcher:e,leaveGuard:i}){return(0,r.jsx)(n,{moduleSwitcher:e,profile:t,leaveGuard:i})}export{i as default};
