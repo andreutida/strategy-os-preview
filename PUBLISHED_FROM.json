@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "main",
-    "commit": "dbe9e1bd6b6b6d8c8ebe86f72cbdb7295ae420a1",
-    "commitDate": "2026-11-13T23:13:34-03:00",
-    "subject": "M02: no celular, o cabeçalho do Mapa de Mercado fica recolhido atrás do botão ☰"
+    "commit": "5196acb38a0bf7e3db194570f4d6e56a545f80c5",
+    "commitDate": "2026-11-14T13:20:43-03:00",
+    "subject": "M03 Contexto: cópia de segurança — só deste mapa e só os três campos (Codex P1/P2 em f80c903)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,19 +15,24 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-CNwYFzsv.css",
-      "sha256": "b5901fa56d2adf6a2891258cbf8b7ab6efffa7055a24dc1d026d281d094d95c0",
-      "bytes": 23618
+      "path": "assets/ContextMapApp-BSWeaBZc.css",
+      "sha256": "b3f8d37f6dc8ae16c807d174fcc4135b5825370b32e91698ee5ea644f019cdfc",
+      "bytes": 21834
     },
     {
-      "path": "assets/ContextMapApp-qRJzwDsB.js",
-      "sha256": "8eb29cb87c0ee1f7f27b56ad2f6f72aa0d41f712676e58f9dc9eae29ba8e085b",
-      "bytes": 211079
+      "path": "assets/ContextMapApp-Bflx0s5J.js",
+      "sha256": "914a105a64b9ae447a987308b09a3386728c2461a3d2f69597852ce029ec81a4",
+      "bytes": 176646
     },
     {
-      "path": "assets/MarketMapApp-8z8kYuRq.js",
-      "sha256": "7ce6a7a9d57c180f701eb68f9cdd07c38623677d37ffce239e5dbbc2c2b67dd0",
+      "path": "assets/MarketMapApp-CTyzm7Ar.js",
+      "sha256": "1f504bc3ee55c87f11b9be03d40151b58d2a8a2190a7f41941275099234a5e4c",
       "bytes": 228
+    },
+    {
+      "path": "assets/PlanMapApp-CUqhHhCO.js",
+      "sha256": "3f7f4353cbc8df0786a5ef511e692db494f5bf27f71ebe6881d4b3a23f744845",
+      "bytes": 162494
     },
     {
       "path": "assets/PlanMapApp-CmFEBuZv.css",
@@ -35,13 +40,8 @@
       "bytes": 36246
     },
     {
-      "path": "assets/PlanMapApp-DuhDtwaV.js",
-      "sha256": "7ace8f320778d709da8292813323a0cec80637c14dc5f7d2d947deee25ab524d",
-      "bytes": 162494
-    },
-    {
-      "path": "assets/idbBackend-XwiSpRXY.js",
-      "sha256": "d031a06b8790c956a5dd1f153d19209bf675f1069ac34bfa1efb764692a58231",
+      "path": "assets/idbBackend-Hg6o0meW.js",
+      "sha256": "8b8dbedc1d50858821c4a34be0679d58343b43733b4cd6753833af65ab9852aa",
       "bytes": 24127
     },
     {
@@ -50,8 +50,8 @@
       "bytes": 80328
     },
     {
-      "path": "assets/index-C9rfNz3y.js",
-      "sha256": "dc0dbe6864ba71a2668e425fc96e7f3317ff76fed4a83bd86ade046e7390a094",
+      "path": "assets/index-DV1koAI0.js",
+      "sha256": "6a0832158935b027294439a77aeb1443735d475c7adcef534709bb3b7af5fb2b",
       "bytes": 556397
     },
     {
@@ -66,7 +66,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "037595e925b62adcf9a28a1bd6151e60535712fa393ef093445b0c04d04f43ce",
+      "sha256": "97979af05f76579de16dc6d13e03b7fea58005fd2e7cbd75792f18a5f02ef574",
       "bytes": 883
     }
   ]
