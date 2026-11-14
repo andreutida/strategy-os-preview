@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "main",
-    "commit": "469e68b453a6b3750f53303c520a6796da69fa3a",
-    "commitDate": "2026-11-11T21:57:54-03:00",
-    "subject": "M01 lançamento: suítes de interface também contra o editor/ publicado (Validador sobre 9734bea)"
+    "commit": "dbe9e1bd6b6b6d8c8ebe86f72cbdb7295ae420a1",
+    "commitDate": "2026-11-13T23:13:34-03:00",
+    "subject": "M02: no celular, o cabeçalho do Mapa de Mercado fica recolhido atrás do botão ☰"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -20,29 +20,29 @@
       "bytes": 23618
     },
     {
-      "path": "assets/ContextMapApp-TPR9Urt7.js",
-      "sha256": "51d64221254b7ccb307896a822810dea932a4e3b84b34333736bd3f98fe34ed4",
-      "bytes": 211046
+      "path": "assets/ContextMapApp-qRJzwDsB.js",
+      "sha256": "8eb29cb87c0ee1f7f27b56ad2f6f72aa0d41f712676e58f9dc9eae29ba8e085b",
+      "bytes": 211079
     },
     {
-      "path": "assets/PlanMapApp-8GpSXlA4.css",
-      "sha256": "41e99316285829dc4a1a39129349158fe66537b9a44b48c6a61de6de898a4d4e",
-      "bytes": 23756
+      "path": "assets/MarketMapApp-8z8kYuRq.js",
+      "sha256": "7ce6a7a9d57c180f701eb68f9cdd07c38623677d37ffce239e5dbbc2c2b67dd0",
+      "bytes": 228
     },
     {
-      "path": "assets/PlanMapApp-CjCB25-N.js",
-      "sha256": "3eb7e792603348da7f7b13cb852ee4d564ce67f0a358fb8bf8b7c60073387d8a",
-      "bytes": 123915
+      "path": "assets/PlanMapApp-CmFEBuZv.css",
+      "sha256": "b7ae1c9d42541cfc8ed628330745a0590287ba51c958d295f8e83fbb67776e98",
+      "bytes": 36246
     },
     {
-      "path": "assets/idbBackend-Brm7TLwV.js",
-      "sha256": "91a93bd3adec0aeb4b1f2734a54fc4e9aab08ff93a553ff2f02544b8d98373e7",
-      "bytes": 23835
+      "path": "assets/PlanMapApp-DuhDtwaV.js",
+      "sha256": "7ace8f320778d709da8292813323a0cec80637c14dc5f7d2d947deee25ab524d",
+      "bytes": 162494
     },
     {
-      "path": "assets/index-8fPyHAbw.js",
-      "sha256": "ce2ddb668c1effc1f994a6b7fd88131f43060114fa284e693c7a40e7581ffe4a",
-      "bytes": 564037
+      "path": "assets/idbBackend-XwiSpRXY.js",
+      "sha256": "d031a06b8790c956a5dd1f153d19209bf675f1069ac34bfa1efb764692a58231",
+      "bytes": 24127
     },
     {
       "path": "assets/index-BhduKWMA.css",
@@ -50,9 +50,24 @@
       "bytes": 80328
     },
     {
+      "path": "assets/index-C9rfNz3y.js",
+      "sha256": "dc0dbe6864ba71a2668e425fc96e7f3317ff76fed4a83bd86ade046e7390a094",
+      "bytes": 556397
+    },
+    {
+      "path": "assets/marketPanel-B2IYkVH8.js",
+      "sha256": "4f412c0536809bbe7a9ece506b7113b466e3c478455a9654382b68f283ef4bab",
+      "bytes": 77964
+    },
+    {
+      "path": "assets/react-sySUN5R7.js",
+      "sha256": "b576f0926cbfbce38707967541156451fe4fb58da8ae7047bb3ee837839aed94",
+      "bytes": 8539
+    },
+    {
       "path": "index.html",
-      "sha256": "a4ff844de0c6e17aab4e70223bd8f9f8f3a40fc852f644c766ad3bbb7922fe86",
-      "bytes": 806
+      "sha256": "037595e925b62adcf9a28a1bd6151e60535712fa393ef093445b0c04d04f43ce",
+      "bytes": 883
     }
   ]
 }
