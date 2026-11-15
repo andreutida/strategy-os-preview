@@ -1,1 +1,0 @@
-import{D as e}from"./index-iloJwtri.js";import{o as t,t as n}from"./PlanMapApp-BWdgOVUS.js";var r=e();function i({moduleSwitcher:e,leaveGuard:i}){return(0,r.jsx)(n,{moduleSwitcher:e,profile:t,leaveGuard:i})}export{i as default};

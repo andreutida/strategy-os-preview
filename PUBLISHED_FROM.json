@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "main",
-    "commit": "4054bd860d286be5cbe819c77450f72bd855541a",
-    "commitDate": "2026-11-15T02:36:45-03:00",
-    "subject": "M04 (2/4) Matriz: botão principal legível sob o mouse (Codex P2 em 04651f8)"
+    "commit": "093214bfeaffd730a8e6bc48ea080782284fbbc6",
+    "commitDate": "2026-11-15T11:21:38-03:00",
+    "subject": "M04 (3/4 e 4/4): plan-map-e2e confere o cartão no padrão escuro (#212121) em vez de branco"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -20,39 +20,39 @@
       "bytes": 31631
     },
     {
-      "path": "assets/ContextMapApp-Cl8rVBBK.js",
-      "sha256": "7d030bdb0137d6c04251be583550238db165b5183268c5186ed407c02366973f",
+      "path": "assets/ContextMapApp-DQ6C6Sq2.js",
+      "sha256": "201827d33ad63b2c55da82b7be6ff4428364863755ddaaca02a647570219d285",
       "bytes": 177589
     },
     {
-      "path": "assets/MarketMapApp-DwWVrYXJ.js",
-      "sha256": "3cbb53c4db1a7661c86c55af1fda92a045e5da30c978c029a3fdef031cef8de2",
+      "path": "assets/MarketMapApp-CjxqC-8U.js",
+      "sha256": "5882a1fcd35fe7f712c2cfd114928820030b9ecd9650eaea8c3d4bf7f6af883d",
       "bytes": 228
     },
     {
-      "path": "assets/PlanMapApp-BWdgOVUS.js",
-      "sha256": "337fb47a54043bbeae16b4fce4b67d13a0a2075ecd9ad2eef7f49ffcf7bcb7c7",
-      "bytes": 163699
+      "path": "assets/PlanMapApp-D7e0Prhr.js",
+      "sha256": "3a63ce9e41a13b63e3f16c98ade4a1de009fd49c6b20285c1d1a3bde93a4f843",
+      "bytes": 163731
     },
     {
-      "path": "assets/PlanMapApp-C83mEGTn.css",
-      "sha256": "a4014120f2e7efdcc5234c071261c44c10b3a5c95928f56828287975284a9309",
-      "bytes": 36898
+      "path": "assets/PlanMapApp-MFKinriR.css",
+      "sha256": "0b4d211c108105eb8a2cf4bc122def316dfddd10fac7bed888d35fb417cf82f8",
+      "bytes": 67958
     },
     {
-      "path": "assets/idbBackend-DfNAVNkX.js",
-      "sha256": "93304c55e6d60219ba78f1b9e5f1d4cd54c776e09c2a67176c391898492c53e4",
+      "path": "assets/idbBackend-DKC2fObh.js",
+      "sha256": "811b367d389aceb2b393455fe598cbedce75bd058b54b791d20f12ac2a7b884c",
       "bytes": 24127
+    },
+    {
+      "path": "assets/index-CnFi7fh9.js",
+      "sha256": "1ba9b84e75ecc5d2e6eef24d315bd01a001c7a1791767598c2966e8251c9f3f5",
+      "bytes": 563330
     },
     {
       "path": "assets/index-DUg3STV7.css",
       "sha256": "e25ef0d2fbf11f3a0ea90261e4fd53f208bef617498591985f3f2297e9482b0c",
       "bytes": 108931
-    },
-    {
-      "path": "assets/index-iloJwtri.js",
-      "sha256": "1562922e013b6ed9e02c1e0b2f62fe9bdfbc237ce77dfb410968bd3b3caa59e0",
-      "bytes": 563330
     },
     {
       "path": "assets/marketPanel-B2IYkVH8.js",
@@ -66,7 +66,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "192fce0ecb47b15130b4773c1b9c193fe3818276c9a84a84f00be0835e950f60",
+      "sha256": "9afe7d407806a8ab3efa4cec064630ef9d0a279ebd94772cd001a0489478edd8",
       "bytes": 883
     }
   ]

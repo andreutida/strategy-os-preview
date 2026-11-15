@@ -1,0 +1,1 @@
+import{D as e}from"./index-CnFi7fh9.js";import{o as t,t as n}from"./PlanMapApp-D7e0Prhr.js";var r=e();function i({moduleSwitcher:e,leaveGuard:i}){return(0,r.jsx)(n,{moduleSwitcher:e,profile:t,leaveGuard:i})}export{i as default};
