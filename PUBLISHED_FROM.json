@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "main",
-    "commit": "da4c274e1d08d2a94260a0fa7fe237dc4c1fb30a",
-    "commitDate": "2026-11-14T21:21:22-03:00",
-    "subject": "M04 (Mapa de Contexto): botão de recolher menor; faixas de redimensionar sem falha no canto e com alvo de toque de 44 px (pedido do PO; Codex P2 ×2 em be2e895)"
+    "commit": "4054bd860d286be5cbe819c77450f72bd855541a",
+    "commitDate": "2026-11-15T02:36:45-03:00",
+    "subject": "M04 (2/4) Matriz: botão principal legível sob o mouse (Codex P2 em 04651f8)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,23 +15,23 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-B1D5Nka1.js",
-      "sha256": "215e59c4010c51d05bf6331af76cdfd8c7da5081e3fb335ec2fefb2d956e3d3c",
-      "bytes": 177589
-    },
-    {
       "path": "assets/ContextMapApp-BXeXyHcp.css",
       "sha256": "a6d0202fd6093877b0eff42b26e2780f4676677216a431e04ac19036a9043eaf",
       "bytes": 31631
     },
     {
-      "path": "assets/MarketMapApp-B4hWfyUg.js",
-      "sha256": "111fc633d03ea3ec4d7de58a571ebee345b36e65cc54b21d7ba1c0e801f9cf93",
+      "path": "assets/ContextMapApp-Cl8rVBBK.js",
+      "sha256": "7d030bdb0137d6c04251be583550238db165b5183268c5186ed407c02366973f",
+      "bytes": 177589
+    },
+    {
+      "path": "assets/MarketMapApp-DwWVrYXJ.js",
+      "sha256": "3cbb53c4db1a7661c86c55af1fda92a045e5da30c978c029a3fdef031cef8de2",
       "bytes": 228
     },
     {
-      "path": "assets/PlanMapApp-8vBXtutN.js",
-      "sha256": "8272f7f6e9db731fe1bc6e46379a314f460ef415a50ef9b9325e42fd915fe6ee",
+      "path": "assets/PlanMapApp-BWdgOVUS.js",
+      "sha256": "337fb47a54043bbeae16b4fce4b67d13a0a2075ecd9ad2eef7f49ffcf7bcb7c7",
       "bytes": 163699
     },
     {
@@ -40,19 +40,19 @@
       "bytes": 36898
     },
     {
-      "path": "assets/idbBackend-e5hUxFxO.js",
-      "sha256": "daa5e2bd03f9b6c9de64cbcbbedd0945c264ca1a38055a80007dfd5bfb5a1a4c",
+      "path": "assets/idbBackend-DfNAVNkX.js",
+      "sha256": "93304c55e6d60219ba78f1b9e5f1d4cd54c776e09c2a67176c391898492c53e4",
       "bytes": 24127
     },
     {
-      "path": "assets/index-CbnLH8HR.js",
-      "sha256": "b3ea1a15703faf95d506a9b60fb6a10f28b6a0376bea80833be074c6ea0809c2",
-      "bytes": 563332
+      "path": "assets/index-DUg3STV7.css",
+      "sha256": "e25ef0d2fbf11f3a0ea90261e4fd53f208bef617498591985f3f2297e9482b0c",
+      "bytes": 108931
     },
     {
-      "path": "assets/index-DO313HAj.css",
-      "sha256": "4b95f68667131b87d2a998bbba4aa901e40f6f1afdf3274ca452089a5edb64be",
-      "bytes": 83865
+      "path": "assets/index-iloJwtri.js",
+      "sha256": "1562922e013b6ed9e02c1e0b2f62fe9bdfbc237ce77dfb410968bd3b3caa59e0",
+      "bytes": 563330
     },
     {
       "path": "assets/marketPanel-B2IYkVH8.js",
@@ -66,7 +66,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "bb53677a99e4942ebbd566e68b3b922b161859ae56ff4648f944331b13b5d678",
+      "sha256": "192fce0ecb47b15130b4773c1b9c193fe3818276c9a84a84f00be0835e950f60",
       "bytes": 883
     }
   ]
