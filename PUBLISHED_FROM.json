@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "main",
-    "commit": "eea27ed703a60dfaf7bff333b22d46fa973ef80a",
-    "commitDate": "2026-11-14T16:37:02-03:00",
-    "subject": "M03 PR B: o Escape que fecha o menu do Mercado não fecha também o painel (Codex P2 em 50a3c6c)"
+    "commit": "da4c274e1d08d2a94260a0fa7fe237dc4c1fb30a",
+    "commitDate": "2026-11-14T21:21:22-03:00",
+    "subject": "M04 (Mapa de Contexto): botão de recolher menor; faixas de redimensionar sem falha no canto e com alvo de toque de 44 px (pedido do PO; Codex P2 ×2 em be2e895)"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,19 +15,24 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-BE47LFGv.css",
-      "sha256": "96322066f03a57b2b7b6fd988a82b2a1bb3b23f1dc712a7053f1c43618c8ef52",
-      "bytes": 21791
+      "path": "assets/ContextMapApp-B1D5Nka1.js",
+      "sha256": "215e59c4010c51d05bf6331af76cdfd8c7da5081e3fb335ec2fefb2d956e3d3c",
+      "bytes": 177589
     },
     {
-      "path": "assets/ContextMapApp-BlAY_9dv.js",
-      "sha256": "4e84dcc2d6a5196fffa7d279380423ba71260b3c2854229fc8ea8f3dd04c2468",
-      "bytes": 177419
+      "path": "assets/ContextMapApp-BXeXyHcp.css",
+      "sha256": "a6d0202fd6093877b0eff42b26e2780f4676677216a431e04ac19036a9043eaf",
+      "bytes": 31631
     },
     {
-      "path": "assets/MarketMapApp-CmfOop63.js",
-      "sha256": "40fddd6b2842c9f4f27f9c4379a950128c5e5f3fc2f373fbebfe862304e71da9",
+      "path": "assets/MarketMapApp-B4hWfyUg.js",
+      "sha256": "111fc633d03ea3ec4d7de58a571ebee345b36e65cc54b21d7ba1c0e801f9cf93",
       "bytes": 228
+    },
+    {
+      "path": "assets/PlanMapApp-8vBXtutN.js",
+      "sha256": "8272f7f6e9db731fe1bc6e46379a314f460ef415a50ef9b9325e42fd915fe6ee",
+      "bytes": 163699
     },
     {
       "path": "assets/PlanMapApp-C83mEGTn.css",
@@ -35,18 +40,13 @@
       "bytes": 36898
     },
     {
-      "path": "assets/PlanMapApp-CXRcrozl.js",
-      "sha256": "b48dea454c27dcf09d844931909d5b310bedf4301047bbc79072046e9b22acae",
-      "bytes": 163699
-    },
-    {
-      "path": "assets/idbBackend-D-TmsaSV.js",
-      "sha256": "a3ba37eac68415dba71dbc2d2d229195dc42a4d2a3cf327bbe1829f8e85e25f8",
+      "path": "assets/idbBackend-e5hUxFxO.js",
+      "sha256": "daa5e2bd03f9b6c9de64cbcbbedd0945c264ca1a38055a80007dfd5bfb5a1a4c",
       "bytes": 24127
     },
     {
-      "path": "assets/index-CQjt2eSH.js",
-      "sha256": "9659ebd9b98a86348e22df49584fad1e0535fd13161b78b1978b12cbeff9c885",
+      "path": "assets/index-CbnLH8HR.js",
+      "sha256": "b3ea1a15703faf95d506a9b60fb6a10f28b6a0376bea80833be074c6ea0809c2",
       "bytes": 563332
     },
     {
@@ -66,7 +66,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "e7d10e53ab2365841a0ef239410a0a19cf6bd1c8f82f8ed301105040933a90f0",
+      "sha256": "bb53677a99e4942ebbd566e68b3b922b161859ae56ff4648f944331b13b5d678",
       "bytes": 883
     }
   ]
