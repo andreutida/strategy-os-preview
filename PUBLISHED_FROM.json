@@ -4,9 +4,9 @@
   "source": {
     "repository": "andreutida/strategy-os-",
     "branch": "main",
-    "commit": "d52bec14d63e99340ca93b98004d97800e2d6bf4",
-    "commitDate": "2026-11-15T14:59:41-03:00",
-    "subject": "PR C: testes de redimensionar ajustados à regra nova do recolhido; arrasto do e2e com tolerância; teste de arrastar vários com bloco sem posição (Validador)"
+    "commit": "651f285c8bfde2e92362767516da06b09192d4fc",
+    "commitDate": "2026-11-16T08:20:35-03:00",
+    "subject": "Backlog: alinhar entre agrupamentos — decisão do PO: o agrupamento cresce"
   },
   "build": {
     "directory": "react-flow-editor",
@@ -15,9 +15,9 @@
   },
   "files": [
     {
-      "path": "assets/ContextMapApp-DmTn7Inx.js",
-      "sha256": "254e551528a7036c89a30ace065f2b1ac618c414aed0e6323fd447e6db77e8df",
-      "bytes": 190378
+      "path": "assets/ContextMapApp-DWCEDvUo.js",
+      "sha256": "c4e995f3cfe3cf415fc8a5b807ce392af2a66e99708a6ffb6da0876761f47271",
+      "bytes": 108086
     },
     {
       "path": "assets/ContextMapApp-Dp35ZwdF.css",
@@ -25,13 +25,13 @@
       "bytes": 32450
     },
     {
-      "path": "assets/MarketMapApp-DXTl0Tii.js",
-      "sha256": "51ccff12a2b3a99759171894fa2827f6a7ac7218a4a0d6bb9643f330be8958a4",
+      "path": "assets/MarketMapApp-BJ29ELg5.js",
+      "sha256": "03437b9e46919bf1c0f324a6f2333e9a6a635b5e7d09f2a8d8c7502a7772d1a5",
       "bytes": 228
     },
     {
-      "path": "assets/PlanMapApp-CL34HXjn.js",
-      "sha256": "678115e25e6a77b2c86e0fc5b0b460d3d04343adb66b92e60bd44f95dfb32a7b",
+      "path": "assets/PlanMapApp-JJ038X8Y.js",
+      "sha256": "aaa8ad9f12227277561ad91b4d830fab68417d1ad6a82b63e11e2d2d4140c853",
       "bytes": 163731
     },
     {
@@ -40,19 +40,24 @@
       "bytes": 67958
     },
     {
-      "path": "assets/idbBackend-oit5qB5v.js",
-      "sha256": "54cb215009dcf8735c0deb373febe0f1fc526f72e5a286814c795c63941e53d7",
+      "path": "assets/cloudAdapter-CQ9HJZZg.js",
+      "sha256": "fe84155e6976e2799586a6866c5f429001649747bede5474dd766538892e055f",
+      "bytes": 2077
+    },
+    {
+      "path": "assets/idbBackend-DbBNcDU3.js",
+      "sha256": "44b68ea668a112cc1769ee4a97d2c7dde2cace95e5cb776b91858d4c1e90ded8",
       "bytes": 24127
     },
     {
-      "path": "assets/index-B_FkxpN5.js",
-      "sha256": "77f1a651ba69b24b7c27c154bd27eb502ec869efa0634625ef332bbab6888c2b",
-      "bytes": 565268
+      "path": "assets/index-B3wDvsUV.js",
+      "sha256": "ed85c03e62f17dcc25feebd3b25a31f1efcb94bea37838e3971610ff971493e9",
+      "bytes": 579407
     },
     {
-      "path": "assets/index-gxNosAmW.css",
-      "sha256": "117036da5297d78633ab202eaea42c333090df567a0208b2ec47d8490926e05d",
-      "bytes": 109005
+      "path": "assets/index-CVvJ_6M4.css",
+      "sha256": "199f2e22334a98f228daffda108254d7736140e5e43e865a911368c4d4a86773",
+      "bytes": 109930
     },
     {
       "path": "assets/marketPanel-B2IYkVH8.js",
@@ -65,8 +70,13 @@
       "bytes": 8539
     },
     {
+      "path": "assets/repository-xPPQJOfp.js",
+      "sha256": "8b09b01f360bb094917814b2ddc1bbfd360fc2e9407ef18026391109ee8607c4",
+      "bytes": 83148
+    },
+    {
       "path": "index.html",
-      "sha256": "602cc77fe928515dcb9c7fac4dcc4cd58ae0288bfae6117eb2d4bf717aba98af",
+      "sha256": "476a4439fcf0e335db7f6501261aaaa36e76ca480dba0437e7ae7b2454cfa296",
       "bytes": 883
     }
   ]
